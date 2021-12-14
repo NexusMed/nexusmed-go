@@ -13,9 +13,6 @@ type Person interface {
 	IsPerson()
 }
 
-//  ##################
-//  Personal details
-// ##################
 type Address struct {
 	Line1      string  `json:"line1"`
 	Line2      *string `json:"line2,omitempty"`
@@ -33,13 +30,12 @@ type AddressInput struct {
 type Answer struct {
 	Index  int    `json:"index"`
 	Value  string `json:"value"`
-	Reject *bool  `json:"reject,omitempty"`
+	Reject bool   `json:"reject"`
 }
 
 type AnswerInput struct {
-	QuestionIndex int       `json:"question_index"`
-	Index         []*int    `json:"index,omitempty"`
-	Value         []*string `json:"value,omitempty"`
+	Choice []*int  `json:"choice,omitempty"`
+	Text   *string `json:"text,omitempty"`
 }
 
 type AnswerQuestionnaireInput struct {
@@ -48,32 +44,14 @@ type AnswerQuestionnaireInput struct {
 	Answers         []*AnswerInput `json:"answers,omitempty"`
 }
 
-type Answers struct {
-	ID              string    `json:"id"`
-	PatientID       string    `json:"patient_id"`
-	QuestionnaireID string    `json:"questionnaire_id"`
-	Answers         []*Answer `json:"answers,omitempty"`
-}
-
-//  ###############
-//  Consultations
-// ###############
 type Consultation struct {
-	ID string `json:"id"`
-	//   the questionnaire
-	QuestionnaireID string `json:"questionnaire_id"`
-	//   answers can be re-used
-	AnswersID string `json:"answers_id"`
-	//   the patient
-	PatientID string `json:"patient_id"`
-	//   the requested prescription items
-	Products []*string `json:"products,omitempty"`
-	//   the prescriber assigned
-	Assigned *Prescriber `json:"assigned,omitempty"`
-	//   the consultation events
-	Events []*ConsultationEvent `json:"events,omitempty"`
-	//   the current status
-	Status *ConsultationStatus `json:"status,omitempty"`
+	ID                     string               `json:"id"`
+	QuestionnaireAnswersID string               `json:"questionnaire_answers_id"`
+	PatientID              string               `json:"patient_id"`
+	ProductID              string               `json:"product_id"`
+	Assigned               *Prescriber          `json:"assigned,omitempty"`
+	Events                 []*ConsultationEvent `json:"events,omitempty"`
+	Status                 *ConsultationStatus  `json:"status,omitempty"`
 }
 
 type ConsultationEvent struct {
@@ -84,15 +62,13 @@ type ConsultationEvent struct {
 }
 
 type CreateAnswer struct {
-	Index  int     `json:"index"`
-	Value  *string `json:"value,omitempty"`
-	Reject *bool   `json:"reject,omitempty"`
+	Value  string `json:"value"`
+	Reject *bool  `json:"reject,omitempty"`
 }
 
 type CreateConsultationInput struct {
-	QuestionnaireID *string        `json:"questionnaire_id,omitempty"`
-	Answers         []*AnswerInput `json:"answers,omitempty"`
-	Products        []string       `json:"products,omitempty"`
+	QuestionnaireAnswersID string `json:"questionnaire_answers_id"`
+	ProductID              string `json:"product_id"`
 }
 
 type CreatePatientInput struct {
@@ -102,9 +78,6 @@ type CreatePatientInput struct {
 	Address *AddressInput `json:"address,omitempty"`
 }
 
-//  ##########
-//  Payments
-// ##########
 type CreatePaymentInput struct {
 	ConsultationID  string             `json:"consultation_id"`
 	Integration     PaymentIntegration `json:"integration"`
@@ -175,25 +148,17 @@ type Products struct {
 	NextToken *string    `json:"nextToken,omitempty"`
 }
 
-//  #########################
-//  Questionnaires and answers
-// #########################
 type Question struct {
-	Index    int          `json:"index"`
-	Type     QuestionType `json:"type"`
-	Text     string       `json:"text"`
-	Required bool         `json:"required"`
-	Info     *string      `json:"info,omitempty"`
-	Answers  []*Answer    `json:"answers,omitempty"`
+	Index   int          `json:"index"`
+	Text    string       `json:"text"`
+	Type    QuestionType `json:"type"`
+	Answers []*Answer    `json:"answers,omitempty"`
 }
 
 type QuestionInput struct {
-	Index    int             `json:"index"`
-	Type     QuestionType    `json:"type"`
-	Text     string          `json:"text"`
-	Required bool            `json:"required"`
-	Info     *string         `json:"info,omitempty"`
-	Answers  []*CreateAnswer `json:"answers,omitempty"`
+	Type    QuestionType    `json:"type"`
+	Text    string          `json:"text"`
+	Answers []*CreateAnswer `json:"answers,omitempty"`
 }
 
 type Questionnaire struct {
@@ -202,12 +167,23 @@ type Questionnaire struct {
 	Questions []*Question `json:"questions,omitempty"`
 }
 
+type QuestionnaireAnswer struct {
+	Question *Question `json:"question,omitempty"`
+	Value    []string  `json:"value,omitempty"`
+}
+
+type QuestionnaireAnswers struct {
+	ID              string                 `json:"id"`
+	PatientID       string                 `json:"patient_id"`
+	QuestionnaireID string                 `json:"questionnaire_id"`
+	Answers         []*QuestionnaireAnswer `json:"answers,omitempty"`
+}
+
 type Rx struct {
 	Medication *Medication `json:"medication,omitempty"`
 	Dosage     *Dosage     `json:"dosage,omitempty"`
 	Usage      *Usage      `json:"usage,omitempty"`
 	Quantity   int         `json:"quantity"`
-	Repeat     *bool       `json:"repeat,omitempty"`
 }
 
 type Shipping struct {
@@ -432,20 +408,18 @@ type QuestionType string
 const (
 	QuestionTypeFreeText   QuestionType = "free_text"
 	QuestionTypeOneOfMany  QuestionType = "one_of_many"
-	QuestionTypeNumeric    QuestionType = "numeric"
 	QuestionTypeManyOfMany QuestionType = "many_of_many"
 )
 
 var AllQuestionType = []QuestionType{
 	QuestionTypeFreeText,
 	QuestionTypeOneOfMany,
-	QuestionTypeNumeric,
 	QuestionTypeManyOfMany,
 }
 
 func (e QuestionType) IsValid() bool {
 	switch e {
-	case QuestionTypeFreeText, QuestionTypeOneOfMany, QuestionTypeNumeric, QuestionTypeManyOfMany:
+	case QuestionTypeFreeText, QuestionTypeOneOfMany, QuestionTypeManyOfMany:
 		return true
 	}
 	return false

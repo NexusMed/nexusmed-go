@@ -25,12 +25,12 @@ type Query struct {
 	GetProducts      *Products      "json:\"getProducts\" graphql:\"getProducts\""
 }
 type Mutation struct {
-	CreatePatient       *Patient       "json:\"createPatient\" graphql:\"createPatient\""
-	UpdatePatient       *Patient       "json:\"updatePatient\" graphql:\"updatePatient\""
-	CreateQuestionnaire *Questionnaire "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
-	AnswerQuestionnaire *Answers       "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
-	CreateConsultation  *Consultation  "json:\"createConsultation\" graphql:\"createConsultation\""
-	CreatePayment       *Payment       "json:\"createPayment\" graphql:\"createPayment\""
+	CreatePatient       *Patient              "json:\"createPatient\" graphql:\"createPatient\""
+	UpdatePatient       *Patient              "json:\"updatePatient\" graphql:\"updatePatient\""
+	CreateQuestionnaire *Questionnaire        "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
+	AnswerQuestionnaire *QuestionnaireAnswers "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
+	CreateConsultation  *Consultation         "json:\"createConsultation\" graphql:\"createConsultation\""
+	CreatePayment       *Payment              "json:\"createPayment\" graphql:\"createPayment\""
 }
 type GetPatient struct {
 	GetPatient *struct {
@@ -55,12 +55,10 @@ type GetQuestionnaire struct {
 		ID        string  "json:\"id\" graphql:\"id\""
 		Title     *string "json:\"title\" graphql:\"title\""
 		Questions []*struct {
-			Index    int          "json:\"index\" graphql:\"index\""
-			Type     QuestionType "json:\"type\" graphql:\"type\""
-			Text     string       "json:\"text\" graphql:\"text\""
-			Required bool         "json:\"required\" graphql:\"required\""
-			Info     *string      "json:\"info\" graphql:\"info\""
-			Answers  []*struct {
+			Index   int          "json:\"index\" graphql:\"index\""
+			Type    QuestionType "json:\"type\" graphql:\"type\""
+			Text    string       "json:\"text\" graphql:\"text\""
+			Answers []*struct {
 				Index int    "json:\"index\" graphql:\"index\""
 				Value string "json:\"value\" graphql:\"value\""
 			} "json:\"answers\" graphql:\"answers\""
@@ -79,12 +77,29 @@ type CreatePatient struct {
 }
 type CreateQuestionnaire struct {
 	CreateQuestionnaire *struct {
-		ID string "json:\"id\" graphql:\"id\""
+		ID        string  "json:\"id\" graphql:\"id\""
+		Title     *string "json:\"title\" graphql:\"title\""
+		Questions []*struct {
+			Index   int          "json:\"index\" graphql:\"index\""
+			Type    QuestionType "json:\"type\" graphql:\"type\""
+			Text    string       "json:\"text\" graphql:\"text\""
+			Answers []*struct {
+				Index  int    "json:\"index\" graphql:\"index\""
+				Value  string "json:\"value\" graphql:\"value\""
+				Reject bool   "json:\"reject\" graphql:\"reject\""
+			} "json:\"answers\" graphql:\"answers\""
+		} "json:\"questions\" graphql:\"questions\""
 	} "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
 }
 type AnswerQuestionnaire struct {
 	AnswerQuestionnaire *struct {
-		ID string "json:\"id\" graphql:\"id\""
+		ID      string "json:\"id\" graphql:\"id\""
+		Answers []*struct {
+			Question struct {
+				Text string "json:\"text\" graphql:\"text\""
+			} "json:\"question\" graphql:\"question\""
+			Value []string "json:\"value\" graphql:\"value\""
+		} "json:\"answers\" graphql:\"answers\""
 	} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
 }
 
@@ -129,8 +144,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 			index
 			type
 			text
-			required
-			info
 			answers {
 				index
 				value
@@ -196,6 +209,17 @@ func (c *Client) CreatePatient(ctx context.Context, input CreatePatientInput, ht
 const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: CreateQuestionnaireInput!) {
 	createQuestionnaire(input: $input) {
 		id
+		title
+		questions {
+			index
+			type
+			text
+			answers {
+				index
+				value
+				reject
+			}
+		}
 	}
 }
 `
@@ -216,6 +240,12 @@ func (c *Client) CreateQuestionnaire(ctx context.Context, input CreateQuestionna
 const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: AnswerQuestionnaireInput!) {
 	answerQuestionnaire(input: $input) {
 		id
+		answers {
+			question {
+				text
+			}
+			value
+		}
 	}
 }
 `
