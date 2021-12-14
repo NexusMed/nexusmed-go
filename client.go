@@ -59,8 +59,9 @@ type GetQuestionnaire struct {
 			Type    QuestionType "json:\"type\" graphql:\"type\""
 			Text    string       "json:\"text\" graphql:\"text\""
 			Answers []*struct {
-				Index int    "json:\"index\" graphql:\"index\""
-				Value string "json:\"value\" graphql:\"value\""
+				Index  int    "json:\"index\" graphql:\"index\""
+				Value  string "json:\"value\" graphql:\"value\""
+				Reject bool   "json:\"reject\" graphql:\"reject\""
 			} "json:\"answers\" graphql:\"answers\""
 		} "json:\"questions\" graphql:\"questions\""
 	} "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""
@@ -147,6 +148,7 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 			answers {
 				index
 				value
+				reject
 			}
 		}
 	}
