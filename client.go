@@ -49,6 +49,11 @@ type GetQuestionnaire struct {
 		} "json:\"questions\" graphql:\"questions\""
 	} "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""
 }
+type CreatePatient struct {
+	CreatePatient *struct {
+		ID string "json:\"id\" graphql:\"id\""
+	} "json:\"createPatient\" graphql:\"createPatient\""
+}
 type CreateQuestionnaire struct {
 	CreateQuestionnaire *struct {
 		ID string "json:\"id\" graphql:\"id\""
@@ -86,6 +91,26 @@ func (c *Client) GetQuestionnaire(ctx context.Context, id string, httpRequestOpt
 
 	var res GetQuestionnaire
 	if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars, httpRequestOptions...); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+const CreatePatientDocument = `mutation CreatePatient ($input: CreatePatientInput!) {
+	createPatient(input: $input) {
+		id
+	}
+}
+`
+
+func (c *Client) CreatePatient(ctx context.Context, input CreatePatientInput, httpRequestOptions ...client.HTTPRequestOption) (*CreatePatient, error) {
+	vars := map[string]interface{}{
+		"input": input,
+	}
+
+	var res CreatePatient
+	if err := c.Client.Post(ctx, "CreatePatient", CreatePatientDocument, &res, vars, httpRequestOptions...); err != nil {
 		return nil, err
 	}
 
