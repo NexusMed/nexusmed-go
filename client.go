@@ -32,6 +32,24 @@ type Mutation struct {
 	CreateConsultation  *Consultation  "json:\"createConsultation\" graphql:\"createConsultation\""
 	CreatePayment       *Payment       "json:\"createPayment\" graphql:\"createPayment\""
 }
+type GetPatient struct {
+	GetPatient *struct {
+		ID   string "json:\"id\" graphql:\"id\""
+		Name struct {
+			Title      *string "json:\"title\" graphql:\"title\""
+			GivenName  string  "json:\"given_name\" graphql:\"given_name\""
+			FamilyName string  "json:\"family_name\" graphql:\"family_name\""
+		} "json:\"name\" graphql:\"name\""
+		Phone   *string "json:\"phone\" graphql:\"phone\""
+		Email   *string "json:\"email\" graphql:\"email\""
+		Address *struct {
+			Line1      string  "json:\"line1\" graphql:\"line1\""
+			Line2      *string "json:\"line2\" graphql:\"line2\""
+			City       *string "json:\"city\" graphql:\"city\""
+			PostalCode string  "json:\"postal_code\" graphql:\"postal_code\""
+		} "json:\"address\" graphql:\"address\""
+	} "json:\"getPatient\" graphql:\"getPatient\""
+}
 type GetQuestionnaire struct {
 	GetQuestionnaire *struct {
 		ID        string  "json:\"id\" graphql:\"id\""
@@ -63,6 +81,39 @@ type AnswerQuestionnaire struct {
 	AnswerQuestionnaire *struct {
 		ID string "json:\"id\" graphql:\"id\""
 	} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
+}
+
+const GetPatientDocument = `query GetPatient ($id: ID!) {
+	getPatient(id: $id) {
+		id
+		name {
+			title
+			given_name
+			family_name
+		}
+		phone
+		email
+		address {
+			line1
+			line2
+			city
+			postal_code
+		}
+	}
+}
+`
+
+func (c *Client) GetPatient(ctx context.Context, id string, httpRequestOptions ...client.HTTPRequestOption) (*GetPatient, error) {
+	vars := map[string]interface{}{
+		"id": id,
+	}
+
+	var res GetPatient
+	if err := c.Client.Post(ctx, "GetPatient", GetPatientDocument, &res, vars, httpRequestOptions...); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }
 
 const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
