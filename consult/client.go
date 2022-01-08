@@ -6,7 +6,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/NexusMed/nexusmed-go/client"
+	"github.com/nexusmed/nexusmed-go/client"
 )
 
 type Client struct {
@@ -142,6 +142,11 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -149,11 +154,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
@@ -181,11 +181,6 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -193,6 +188,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
