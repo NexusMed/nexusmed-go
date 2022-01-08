@@ -111,7 +111,7 @@ func (er *ErrorResponse) Error() string {
 }
 
 // the response into the given object.
-func (c *Client) Post(ctx context.Context, operationName, query string, respData interface{}, vars map[string]interface{}, interceptors ...RequestInterceptor) error {
+func (c *Client) Post(operationName, query string, respData interface{}, vars map[string]interface{}, interceptors ...RequestInterceptor) error {
 	r := &Request{
 		Query:         query,
 		Variables:     vars,
@@ -123,6 +123,7 @@ func (c *Client) Post(ctx context.Context, operationName, query string, respData
 	if err != nil {
 		return fmt.Errorf("encode: %w", err)
 	}
+	ctx := context.Background()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURL, bytes.NewBuffer(requestBody))
 	if err != nil {
