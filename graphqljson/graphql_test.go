@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/NexusMed/nexusmed-go/graphqljson"
+	"github.com/nexusmed/nexusmed-go/graphqljson"
 )
 
 func TestUnmarshalGraphQL(t *testing.T) {
