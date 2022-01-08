@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/NexusMed/nexusmed-go/graphqljson"
+	"github.com/nexusmed/nexusmed-go/graphqljson"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
