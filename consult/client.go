@@ -13,8 +13,8 @@ type Client struct {
 	Client *client.Client
 }
 
-func NewClient(cli *http.Client, baseURL string, options ...client.HTTPRequestOption) *Client {
-	return &Client{Client: client.NewClient(cli, baseURL, options...)}
+func NewClient(cli *http.Client, options ...client.HTTPRequestOption) *Client {
+	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult", options...)}
 }
 
 type Query struct {
@@ -81,11 +81,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -93,6 +88,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
