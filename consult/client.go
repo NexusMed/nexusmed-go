@@ -6,7 +6,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/NexusMed/gqlgenc/client"
+	"github.com/NexusMed/nexusmed-go/client"
 )
 
 type Client struct {
