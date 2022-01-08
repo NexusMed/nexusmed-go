@@ -3,7 +3,6 @@
 package consult
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/nexusmed/nexusmed-go/client"
@@ -96,7 +95,7 @@ fragment QuestionParts on Question {
 }
 `
 
-func (c *Client) GetQuestionnaire(ctx context.Context, id string) (*GetQuestionnaire, error) {
+func (c *Client) GetQuestionnaire(id string) (*GetQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
@@ -120,7 +119,7 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 }
 `
 
-func (c *Client) CreateConsultation(ctx context.Context, input CreateConsultationInput) (*CreateConsultation, error) {
+func (c *Client) CreateConsultation(input CreateConsultationInput) (*CreateConsultation, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
@@ -157,7 +156,7 @@ fragment AnswerParts on Answer {
 }
 `
 
-func (c *Client) CreateQuestionnaire(ctx context.Context, input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
+func (c *Client) CreateQuestionnaire(input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
@@ -196,7 +195,7 @@ fragment AnswerParts on Answer {
 }
 `
 
-func (c *Client) AnswerQuestionnaire(ctx context.Context, input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
+func (c *Client) AnswerQuestionnaire(input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
