@@ -80,11 +80,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -92,6 +87,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -101,7 +101,7 @@ func (c *Client) GetQuestionnaire(id string) (*GetQuestionnaire, error) {
 	}
 
 	var res GetQuestionnaire
-	if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -125,7 +125,7 @@ func (c *Client) CreateConsultation(input CreateConsultationInput) (*CreateConsu
 	}
 
 	var res CreateConsultation
-	if err := c.Client.Post(ctx, "CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -162,7 +162,7 @@ func (c *Client) CreateQuestionnaire(input CreateQuestionnaireInput) (*CreateQue
 	}
 
 	var res CreateQuestionnaire
-	if err := c.Client.Post(ctx, "CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -201,7 +201,7 @@ func (c *Client) AnswerQuestionnaire(input AnswerQuestionnaireInput) (*AnswerQue
 	}
 
 	var res AnswerQuestionnaire
-	if err := c.Client.Post(ctx, "AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
