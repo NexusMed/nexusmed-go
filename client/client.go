@@ -62,13 +62,10 @@ type Request struct {
 }
 
 // NewClient creates a new http client wrapper
-func NewClient(client *http.Client, baseURL string, interceptors ...RequestInterceptor) *Client {
+func NewClient(client *http.Client, baseURL string) *Client {
 	return &Client{
 		Client:  client,
 		BaseURL: baseURL,
-		RequestInterceptor: ChainInterceptor(append([]RequestInterceptor{func(ctx context.Context, requestSet *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error {
-			return next(ctx, requestSet, gqlInfo, res)
-		}}, interceptors...)...),
 	}
 }
 
