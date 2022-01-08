@@ -81,6 +81,11 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -89,20 +94,15 @@ fragment QuestionParts on Question {
 		... AnswerParts
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 `
 
-func (c *Client) GetQuestionnaire(ctx context.Context, id string, httpRequestOptions ...client.HTTPRequestOption) (*GetQuestionnaire, error) {
+func (c *Client) GetQuestionnaire(ctx context.Context, id string) (*GetQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
 
 	var res GetQuestionnaire
-	if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars, httpRequestOptions...); err != nil {
+	if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -120,13 +120,13 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 }
 `
 
-func (c *Client) CreateConsultation(ctx context.Context, input CreateConsultationInput, httpRequestOptions ...client.HTTPRequestOption) (*CreateConsultation, error) {
+func (c *Client) CreateConsultation(ctx context.Context, input CreateConsultationInput) (*CreateConsultation, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
 
 	var res CreateConsultation
-	if err := c.Client.Post(ctx, "CreateConsultation", CreateConsultationDocument, &res, vars, httpRequestOptions...); err != nil {
+	if err := c.Client.Post(ctx, "CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -142,11 +142,6 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -155,15 +150,20 @@ fragment QuestionParts on Question {
 		... AnswerParts
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 `
 
-func (c *Client) CreateQuestionnaire(ctx context.Context, input CreateQuestionnaireInput, httpRequestOptions ...client.HTTPRequestOption) (*CreateQuestionnaire, error) {
+func (c *Client) CreateQuestionnaire(ctx context.Context, input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
 
 	var res CreateQuestionnaire
-	if err := c.Client.Post(ctx, "CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars, httpRequestOptions...); err != nil {
+	if err := c.Client.Post(ctx, "CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
@@ -181,11 +181,6 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -194,15 +189,20 @@ fragment QuestionParts on Question {
 		... AnswerParts
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 `
 
-func (c *Client) AnswerQuestionnaire(ctx context.Context, input AnswerQuestionnaireInput, httpRequestOptions ...client.HTTPRequestOption) (*AnswerQuestionnaire, error) {
+func (c *Client) AnswerQuestionnaire(ctx context.Context, input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
 
 	var res AnswerQuestionnaire
-	if err := c.Client.Post(ctx, "AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars, httpRequestOptions...); err != nil {
+	if err := c.Client.Post(ctx, "AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
 		return nil, err
 	}
 
