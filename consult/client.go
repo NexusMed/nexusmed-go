@@ -16,6 +16,10 @@ func NewClient(cli *http.Client) *Client {
 	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult")}
 }
 
+func (c *Client) SetApiKey(key string) {
+	c.Client.SetApiKey(key)
+}
+
 type Query struct {
 	GetQuestionnaire        *Questionnaire        "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""
 	GetQuestionnaires       *Questionnaires       "json:\"getQuestionnaires\" graphql:\"getQuestionnaires\""
