@@ -72,8 +72,8 @@ func NewClient(client *http.Client, baseURL string, interceptors ...RequestInter
 	}
 }
 
-func (c *Client) SetKey(key *string) {
-	c.Key = key
+func (c *Client) SetKey(key string) {
+	c.Key = &key
 }
 
 // GqlErrorList is the struct of a standard graphql error response
