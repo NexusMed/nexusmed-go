@@ -3,76 +3,51 @@
 package consult
 
 import (
-	"context"
-	"net/http"
+"bytes"
+"context"
+"encoding/json"
+"fmt"
+"io"
+"io/ioutil"
+"net/http"
+"net/url"
+"path"
+"time"
+"github.com/nexusmed/nexusmed-go/graphqljson"
+"github.com/nexusmed/nexusmed-go/client")
 
-	"github.com/nexusmed/nexusmed-go/client"
-)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-type Client struct {
-	Client *client.Client
-}
 
-func NewClient(cli *http.Client) *Client {
-	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult")}
-}
+	
+	
 
-type Query struct {
-	GetQuestionnaire        *Questionnaire        "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""
-	GetQuestionnaires       *Questionnaires       "json:\"getQuestionnaires\" graphql:\"getQuestionnaires\""
-	GetQuestionnaireAnswers *QuestionnaireAnswers "json:\"getQuestionnaireAnswers\" graphql:\"getQuestionnaireAnswers\""
-	GetConsultation         Consultation          "json:\"getConsultation\" graphql:\"getConsultation\""
-}
-type Mutation struct {
-	CreateQuestionnaire *Questionnaire        "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
-	AnswerQuestionnaire *QuestionnaireAnswers "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
-	CreateConsultation  Consultation          "json:\"createConsultation\" graphql:\"createConsultation\""
-}
-type QuestionParts struct {
-	Index   int            "json:\"index\" graphql:\"index\""
-	Type    QuestionType   "json:\"type\" graphql:\"type\""
-	Text    string         "json:\"text\" graphql:\"text\""
-	Answers []*AnswerParts "json:\"answers\" graphql:\"answers\""
-}
-type AnswerParts struct {
-	Index  int    "json:\"index\" graphql:\"index\""
-	Value  string "json:\"value\" graphql:\"value\""
-	Reject bool   "json:\"reject\" graphql:\"reject\""
-}
-type GetQuestionnaire struct {
-	GetQuestionnaire *struct {
-		ID        string           "json:\"id\" graphql:\"id\""
-		Title     *string          "json:\"title\" graphql:\"title\""
-		Questions []*QuestionParts "json:\"questions\" graphql:\"questions\""
-	} "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""
-}
-type CreateConsultation struct {
-	CreateConsultation *struct {
-		Typename      *string "json:\"__typename\" graphql:\"__typename\""
-		IConsultation struct {
-			ID     string             "json:\"id\" graphql:\"id\""
-			Status ConsultationStatus "json:\"status\" graphql:\"status\""
-		} "graphql:\"... on IConsultation\""
-	} "json:\"createConsultation\" graphql:\"createConsultation\""
-}
-type CreateQuestionnaire struct {
-	CreateQuestionnaire *struct {
-		ID        string           "json:\"id\" graphql:\"id\""
-		Title     *string          "json:\"title\" graphql:\"title\""
-		Questions []*QuestionParts "json:\"questions\" graphql:\"questions\""
-	} "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
-}
-type AnswerQuestionnaire struct {
-	AnswerQuestionnaire *struct {
-		ID      string "json:\"id\" graphql:\"id\""
-		Answers []*struct {
-			Question QuestionParts "json:\"question\" graphql:\"question\""
-			Value    []string      "json:\"value\" graphql:\"value\""
-		} "json:\"answers\" graphql:\"answers\""
-	} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
-}
+	type Client struct {
+		Client *client.Client
+	}
 
-const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
+	func NewClient(cli *http.Client) *Client {
+		return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult")}
+	}
+
+type Query struct{GetQuestionnaire *Questionnaire "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""; GetQuestionnaires *Questionnaires "json:\"getQuestionnaires\" graphql:\"getQuestionnaires\""; GetQuestionnaireAnswers *QuestionnaireAnswers "json:\"getQuestionnaireAnswers\" graphql:\"getQuestionnaireAnswers\""; GetConsultation Consultation "json:\"getConsultation\" graphql:\"getConsultation\""}
+	type Mutation struct{CreateQuestionnaire *Questionnaire "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""; AnswerQuestionnaire *QuestionnaireAnswers "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""; CreateConsultation Consultation "json:\"createConsultation\" graphql:\"createConsultation\""}
+	type  QuestionParts struct{Index int "json:\"index\" graphql:\"index\""; Type QuestionType "json:\"type\" graphql:\"type\""; Text string "json:\"text\" graphql:\"text\""; Answers []*AnswerParts "json:\"answers\" graphql:\"answers\""}
+	type  AnswerParts struct{Index int "json:\"index\" graphql:\"index\""; Value string "json:\"value\" graphql:\"value\""; Reject bool "json:\"reject\" graphql:\"reject\""}
+    type  GetQuestionnaire struct{GetQuestionnaire *struct{ID string "json:\"id\" graphql:\"id\""; Title *string "json:\"title\" graphql:\"title\""; Questions []*QuestionParts "json:\"questions\" graphql:\"questions\""} "json:\"getQuestionnaire\" graphql:\"getQuestionnaire\""}
+    type  CreateConsultation struct{CreateConsultation *struct{Typename *string "json:\"__typename\" graphql:\"__typename\""; IConsultation struct{ID string "json:\"id\" graphql:\"id\""; Status ConsultationStatus "json:\"status\" graphql:\"status\""} "graphql:\"... on IConsultation\""} "json:\"createConsultation\" graphql:\"createConsultation\""}
+    type  CreateQuestionnaire struct{CreateQuestionnaire *struct{ID string "json:\"id\" graphql:\"id\""; Title *string "json:\"title\" graphql:\"title\""; Questions []*QuestionParts "json:\"questions\" graphql:\"questions\""} "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""}
+    type  AnswerQuestionnaire struct{AnswerQuestionnaire *struct{ID string "json:\"id\" graphql:\"id\""; Answers []*struct{Question QuestionParts "json:\"question\" graphql:\"question\""; Value []string "json:\"value\" graphql:\"value\""} "json:\"answers\" graphql:\"answers\""} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""}
+	const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 	getQuestionnaire(id: $id) {
 		id
 		title
@@ -80,11 +55,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 			... QuestionParts
 		}
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 fragment QuestionParts on Question {
 	index
@@ -94,22 +64,25 @@ fragment QuestionParts on Question {
 		... AnswerParts
 	}
 }
-`
-
-func (c *Client) GetQuestionnaire(ctx context.Context, id string) (*GetQuestionnaire, error) {
-	vars := map[string]interface{}{
-		"id": id,
-	}
-
-	var res GetQuestionnaire
-	if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
-		return nil, err
-	}
-
-	return &res, nil
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
+`
+		func (c *Client) GetQuestionnaire (, id string) (*GetQuestionnaire, error) {
+			vars := map[string]interface{}{
+				"id": id,
+			}
 
-const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateConsultationInput!) {
+			var res GetQuestionnaire
+			if err := c.Client.Post(ctx, "GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
+				return nil, err
+			}
+
+			return &res, nil
+		}
+	const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateConsultationInput!) {
 	createConsultation(input: $input) {
 		__typename
 		... on IConsultation {
@@ -119,21 +92,19 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 	}
 }
 `
+		func (c *Client) CreateConsultation (, input CreateConsultationInput) (*CreateConsultation, error) {
+			vars := map[string]interface{}{
+				"input": input,
+			}
 
-func (c *Client) CreateConsultation(ctx context.Context, input CreateConsultationInput) (*CreateConsultation, error) {
-	vars := map[string]interface{}{
-		"input": input,
-	}
+			var res CreateConsultation
+			if err := c.Client.Post(ctx, "CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
+				return nil, err
+			}
 
-	var res CreateConsultation
-	if err := c.Client.Post(ctx, "CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: CreateQuestionnaireInput!) {
+			return &res, nil
+		}
+	const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: CreateQuestionnaireInput!) {
 	createQuestionnaire(input: $input) {
 		id
 		title
@@ -156,21 +127,19 @@ fragment AnswerParts on Answer {
 	reject
 }
 `
+		func (c *Client) CreateQuestionnaire (, input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
+			vars := map[string]interface{}{
+				"input": input,
+			}
 
-func (c *Client) CreateQuestionnaire(ctx context.Context, input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
-	vars := map[string]interface{}{
-		"input": input,
-	}
+			var res CreateQuestionnaire
+			if err := c.Client.Post(ctx, "CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
+				return nil, err
+			}
 
-	var res CreateQuestionnaire
-	if err := c.Client.Post(ctx, "CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: AnswerQuestionnaireInput!) {
+			return &res, nil
+		}
+	const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: AnswerQuestionnaireInput!) {
 	answerQuestionnaire(input: $input) {
 		id
 		answers {
@@ -195,16 +164,15 @@ fragment AnswerParts on Answer {
 	reject
 }
 `
+		func (c *Client) AnswerQuestionnaire (, input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
+			vars := map[string]interface{}{
+				"input": input,
+			}
 
-func (c *Client) AnswerQuestionnaire(ctx context.Context, input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
-	vars := map[string]interface{}{
-		"input": input,
-	}
+			var res AnswerQuestionnaire
+			if err := c.Client.Post(ctx, "AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
+				return nil, err
+			}
 
-	var res AnswerQuestionnaire
-	if err := c.Client.Post(ctx, "AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
+			return &res, nil
+		}
