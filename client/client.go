@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -48,6 +49,7 @@ func ChainInterceptor(interceptors ...RequestInterceptor) RequestInterceptor {
 // Client is the http client wrapper
 type Client struct {
 	Client             *http.Client
+	Key                *string
 	BaseURL            string
 	RequestInterceptor RequestInterceptor
 }
@@ -68,6 +70,10 @@ func NewClient(client *http.Client, baseURL string, interceptors ...RequestInter
 			return next(ctx, requestSet, gqlInfo, res)
 		}}, interceptors...)...),
 	}
+}
+
+func (c *Client) SetKey(key *string) {
+	c.Key = key
 }
 
 // GqlErrorList is the struct of a standard graphql error response
@@ -127,6 +133,10 @@ func (c *Client) Post(ctx context.Context, operationName, query string, respData
 	}
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("Accept", "application/json; charset=utf-8")
+	if *c.Key == "" {
+		return errors.New("Authorization header not set with client.SetKey(\"SECRET_KEY\")")
+	}
+	req.Header.Set("Authorization", *c.Key)
 
 	f := ChainInterceptor(append([]RequestInterceptor{c.RequestInterceptor}, interceptors...)...)
 
