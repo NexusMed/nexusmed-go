@@ -13,8 +13,8 @@ type Client struct {
 	Client *client.Client
 }
 
-func NewClient(cli *http.Client, options ...client.HTTPRequestOption) *Client {
-	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult", options...)}
+func NewClient(cli *http.Client) *Client {
+	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult")}
 }
 
 type Query struct {
@@ -142,6 +142,11 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -149,11 +154,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
@@ -181,6 +181,11 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -188,11 +193,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
