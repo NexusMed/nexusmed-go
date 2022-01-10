@@ -22,6 +22,11 @@ func NewGQLRequestInfo(r *Request) *GQLRequestInfo {
 	}
 }
 
+type IClient interface {
+	New(pathURL string, interceptors ...RequestInterceptor) *Client
+	SetApiKey(key string)
+}
+
 // Client is the http client wrapper
 type Client struct {
 	Client             *http.Client

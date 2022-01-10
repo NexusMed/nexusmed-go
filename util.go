@@ -6,7 +6,7 @@ import (
 	"github.com/nexusmed/nexusmed-go/consult"
 )
 
-// Converts []consult.AnswerInput to []*consult.AnswerInput
+// AnswerInputList converts []consult.AnswerInput to []*consult.AnswerInput
 func AnswerInputList(in []consult.AnswerInput) []*consult.AnswerInput {
 	out := make([]*consult.AnswerInput, len(in))
 	for i := range in {
@@ -15,7 +15,7 @@ func AnswerInputList(in []consult.AnswerInput) []*consult.AnswerInput {
 	return out
 }
 
-// Converts interface{} to *consult.QuestionnaireAnswers
+// QuestionnaireAnswers converts interface{} to *consult.QuestionnaireAnswers
 func QuestionnaireAnswers(in interface{}) *consult.QuestionnaireAnswers {
 	b, _ := json.Marshal(in)
 	var qans consult.QuestionnaireAnswers
