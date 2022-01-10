@@ -128,7 +128,8 @@ type Pharmacist struct {
 func (Pharmacist) IsPrescriber() {}
 
 type ProductInput struct {
-	ID string `json:"id"`
+	ID       string `json:"id"`
+	Quantity int    `json:"quantity"`
 }
 
 type Question struct {
