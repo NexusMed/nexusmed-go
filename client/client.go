@@ -23,29 +23,6 @@ func NewGQLRequestInfo(r *Request) *GQLRequestInfo {
 	}
 }
 
-type RequestInterceptorFunc func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}) error
-
-type RequestInterceptor func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error
-
-func ChainInterceptor(interceptors ...RequestInterceptor) RequestInterceptor {
-	n := len(interceptors)
-
-	return func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error {
-		chainer := func(currentInter RequestInterceptor, currentFunc RequestInterceptorFunc) RequestInterceptorFunc {
-			return func(currentCtx context.Context, currentReq *http.Request, currentGqlInfo *GQLRequestInfo, currentRes interface{}) error {
-				return currentInter(currentCtx, currentReq, currentGqlInfo, currentRes, currentFunc)
-			}
-		}
-
-		chainedHandler := next
-		for i := n - 1; i >= 0; i-- {
-			chainedHandler = chainer(interceptors[i], chainedHandler)
-		}
-
-		return chainedHandler(ctx, req, gqlInfo, res)
-	}
-}
-
 // Client is the http client wrapper
 type Client struct {
 	Client             *http.Client
@@ -62,10 +39,10 @@ type Request struct {
 }
 
 // NewClient creates a new http client wrapper
-func NewClient(client *http.Client, baseURL string) *Client {
+func New(pathURL string) *Client {
 	return &Client{
-		Client:  client,
-		BaseURL: baseURL,
+		Client:  http.DefaultClient,
+		BaseURL: "https://api.nexusmed.io" + pathURL,
 	}
 }
 
@@ -209,4 +186,27 @@ func unmarshal(data []byte, res interface{}) error {
 	}
 
 	return nil
+}
+
+type RequestInterceptorFunc func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}) error
+
+type RequestInterceptor func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error
+
+func ChainInterceptor(interceptors ...RequestInterceptor) RequestInterceptor {
+	n := len(interceptors)
+
+	return func(ctx context.Context, req *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error {
+		chainer := func(currentInter RequestInterceptor, currentFunc RequestInterceptorFunc) RequestInterceptorFunc {
+			return func(currentCtx context.Context, currentReq *http.Request, currentGqlInfo *GQLRequestInfo, currentRes interface{}) error {
+				return currentInter(currentCtx, currentReq, currentGqlInfo, currentRes, currentFunc)
+			}
+		}
+
+		chainedHandler := next
+		for i := n - 1; i >= 0; i-- {
+			chainedHandler = chainer(interceptors[i], chainedHandler)
+		}
+
+		return chainedHandler(ctx, req, gqlInfo, res)
+	}
 }
