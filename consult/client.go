@@ -3,17 +3,15 @@
 package consult
 
 import (
-	"net/http"
-
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
 type Client struct {
-	Client *client.Client
+	*client.Client
 }
 
-func NewClient(cli *http.Client) *Client {
-	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/consult")}
+func New() *Client {
+	return &Client{client.New("/consult")}
 }
 
 func (c *Client) SetApiKey(key string) {

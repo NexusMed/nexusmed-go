@@ -3,17 +3,15 @@
 package patients
 
 import (
-	"net/http"
-
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
 type Client struct {
-	Client *client.Client
+	*client.Client
 }
 
-func NewClient(cli *http.Client) *Client {
-	return &Client{Client: client.NewClient(cli, "https://api.nexusmed.io/patients")}
+func New() *Client {
+	return &Client{client.New("/patients")}
 }
 
 func (c *Client) SetApiKey(key string) {
@@ -129,6 +127,21 @@ const GetPatientDocument = `query GetPatient ($id: ID!) {
 		}
 	}
 }
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
+}
+fragment PrescriptionParts on Prescription {
+	id
+	created_at
+	prescriber {
+		id
+		name {
+			... NameParts
+		}
+	}
+}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -152,21 +165,6 @@ fragment PatientParts on Patient {
 	}
 	stripe {
 		id
-	}
-}
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
-fragment PrescriptionParts on Prescription {
-	id
-	created_at
-	prescriber {
-		id
-		name {
-			... NameParts
-		}
 	}
 }
 `
