@@ -10,3 +10,11 @@ func AnswerInputList(in []consult.AnswerInput) []*consult.AnswerInput {
 	}
 	return out
 }
+
+// Converts interface{} to *consult.QuestionnaireAnswers
+func QuestionnaireAnswers(in interface{}) *consult.QuestionnaireAnswers {
+	b, _ := json.Marshal(in)
+	var qans consult.QuestionnaireAnswers
+	json.Unmarshal(b, &qans)
+	return &qans
+}
