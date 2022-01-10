@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -38,14 +37,18 @@ type Request struct {
 	OperationName string                 `json:"operationName,omitempty"`
 }
 
-// NewClient creates a new http client wrapper
-func New(pathURL string) *Client {
+// New creates a new http client wrapper
+func New(pathURL string, interceptors ...RequestInterceptor) *Client {
 	return &Client{
 		Client:  http.DefaultClient,
 		BaseURL: "https://api.nexusmed.io" + pathURL,
+		RequestInterceptor: ChainInterceptor(append([]RequestInterceptor{func(ctx context.Context, requestSet *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error {
+			return next(ctx, requestSet, gqlInfo, res)
+		}}, interceptors...)...),
 	}
 }
 
+// SetApiKey sets the Authorization header
 func (c *Client) SetApiKey(key string) {
 	c.ApiKey = &key
 }
@@ -109,7 +112,7 @@ func (c *Client) Post(operationName, query string, respData interface{}, vars ma
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("Accept", "application/json; charset=utf-8")
 	if *c.ApiKey == "" {
-		return errors.New("Authorization header not set with client.SetApiKey()")
+		return fmt.Errorf("Authorization header not set with client.SetApiKey()")
 	}
 	req.Header.Set("Authorization", *c.ApiKey)
 
