@@ -8,6 +8,6 @@ import (
 type ConsultAPI interface {
 	AnswerQuestionnaire(consult.AnswerQuestionnaireInput) (*consult.AnswerQuestionnaire, error)
 	
-	New(pathURL string, interceptors ...RequestInterceptor) *Client
+	New() *Client
 	SetApiKey(key string)
 }
