@@ -142,7 +142,7 @@ func parseResponse(body []byte, httpCode int, result interface{}) error {
 	if isKOCode {
 		errResponse.NetworkError = &HTTPError{
 			Code:    httpCode,
-			Message: fmt.Sprintf("Response body %s", string(body)),
+			Message: string(body),
 		}
 	}
 
