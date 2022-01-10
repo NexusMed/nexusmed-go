@@ -51,11 +51,20 @@ type GetQuestionnaire struct {
 }
 type CreateConsultation struct {
 	CreateConsultation *struct {
-		Typename      *string "json:\"__typename\" graphql:\"__typename\""
-		IConsultation struct {
-			ID     string             "json:\"id\" graphql:\"id\""
-			Status ConsultationStatus "json:\"status\" graphql:\"status\""
-		} "graphql:\"... on IConsultation\""
+		Typename                 *string "json:\"__typename\" graphql:\"__typename\""
+		AsynchronousConsultation struct {
+			ID      string "json:\"id\" graphql:\"id\""
+			Patient struct {
+				ID string "json:\"id\" graphql:\"id\""
+			} "json:\"patient\" graphql:\"patient\""
+			Status   ConsultationStatus "json:\"status\" graphql:\"status\""
+			Products []*struct {
+				ID string "json:\"id\" graphql:\"id\""
+			} "json:\"products\" graphql:\"products\""
+			QuestionnaireAnswers struct {
+				ID string "json:\"id\" graphql:\"id\""
+			} "json:\"questionnaire_answers\" graphql:\"questionnaire_answers\""
+		} "graphql:\"... on AsynchronousConsultation\""
 	} "json:\"createConsultation\" graphql:\"createConsultation\""
 }
 type CreateQuestionnaire struct {
@@ -115,9 +124,18 @@ func (c *Client) GetQuestionnaire(id string) (*GetQuestionnaire, error) {
 const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateConsultationInput!) {
 	createConsultation(input: $input) {
 		__typename
-		... on IConsultation {
+		... on AsynchronousConsultation {
 			id
+			patient {
+				id
+			}
 			status
+			products {
+				id
+			}
+			questionnaire_answers {
+				id
+			}
 		}
 	}
 }
@@ -145,6 +163,11 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -152,11 +175,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
