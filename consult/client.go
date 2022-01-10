@@ -79,6 +79,10 @@ type AnswerQuestionnaire struct {
 			Question QuestionParts "json:\"question\" graphql:\"question\""
 			Value    []string      "json:\"value\" graphql:\"value\""
 		} "json:\"answers\" graphql:\"answers\""
+		CreatedAt     *string "json:\"created_at\" graphql:\"created_at\""
+		Questionnaire struct {
+			ID string "json:\"id\" graphql:\"id\""
+		} "json:\"questionnaire\" graphql:\"questionnaire\""
 	} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
 }
 
@@ -161,11 +165,6 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -173,6 +172,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -197,6 +201,10 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 				... QuestionParts
 			}
 			value
+		}
+		created_at
+		questionnaire {
+			id
 		}
 	}
 }
