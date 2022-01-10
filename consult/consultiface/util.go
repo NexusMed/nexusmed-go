@@ -14,6 +14,14 @@ func AnswerQuestionnaire(in consult.QuestionnaireAnswers) *consult.AnswerQuestio
 	return &out
 }
 
+// CreateConsultation converts consult.Consultation to *consult.CreateConsultation
+func CreateConsultation(in consult.Consultation) *consult.CreateConsultation {
+	b, _ := json.Marshal(in)
+	var out consult.CreateConsultation
+	json.Unmarshal(b, &out.CreateConsultation)
+	return &out
+}
+
 // AnswerInputListValues converts []*consult.AnswerInput to []consult.AnswerInput
 func AnswerInputListValues(in []*consult.AnswerInput) []consult.AnswerInput {
 	out := make([]consult.AnswerInput, len(in))
