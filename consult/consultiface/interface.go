@@ -7,5 +7,7 @@ import (
 
 type ConsultAPI interface {
 	AnswerQuestionnaire(consult.AnswerQuestionnaireInput) (*consult.AnswerQuestionnaire, error)
-	client.IClient
+	
+	New(pathURL string, interceptors ...RequestInterceptor) *Client
+	SetApiKey(key string)
 }
