@@ -22,3 +22,11 @@ func QuestionnaireAnswers(in interface{}) *consult.QuestionnaireAnswers {
 	json.Unmarshal(b, &qans)
 	return &qans
 }
+
+// AsynchronousConsultation converts interface{} to *consult.AsynchronousConsultation
+func AsynchronousConsultation(in interface{}) *consult.AsynchronousConsultation {
+	b, _ := json.Marshal(in)
+	var aclt consult.AsynchronousConsultation
+	json.Unmarshal(b, &aclt)
+	return &aclt
+}
