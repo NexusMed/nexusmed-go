@@ -1,6 +1,10 @@
 package nexusmed
 
-import "github.com/nexusmed/nexusmed-go/consult"
+import (
+	"encoding/json"
+
+	"github.com/nexusmed/nexusmed-go/consult"
+)
 
 // Converts []consult.AnswerInput to []*consult.AnswerInput
 func AnswerInputList(in []consult.AnswerInput) []*consult.AnswerInput {
