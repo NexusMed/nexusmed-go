@@ -34,13 +34,13 @@ type GetProducts struct {
 			Name       string "json:\"name\" graphql:\"name\""
 			Price      int    "json:\"price\" graphql:\"price\""
 			Medication struct {
-				Name *string "json:\"name\" graphql:\"name\""
+				Name   *string "json:\"name\" graphql:\"name\""
+				Dosage *struct {
+					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+					Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+				} "json:\"dosage\" graphql:\"dosage\""
+				Quantity *int "json:\"quantity\" graphql:\"quantity\""
 			} "json:\"medication\" graphql:\"medication\""
-			Dosage struct {
-				Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
-				Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
-			} "json:\"dosage\" graphql:\"dosage\""
-			Quantity int "json:\"quantity\" graphql:\"quantity\""
 		} "json:\"items\" graphql:\"items\""
 		NextToken *string "json:\"next_token\" graphql:\"next_token\""
 	} "json:\"getProducts\" graphql:\"getProducts\""
@@ -51,13 +51,13 @@ type GetProduct struct {
 		Name       string "json:\"name\" graphql:\"name\""
 		Price      int    "json:\"price\" graphql:\"price\""
 		Medication struct {
-			Name *string "json:\"name\" graphql:\"name\""
+			Name   *string "json:\"name\" graphql:\"name\""
+			Dosage *struct {
+				Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+				Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+			} "json:\"dosage\" graphql:\"dosage\""
+			Quantity *int "json:\"quantity\" graphql:\"quantity\""
 		} "json:\"medication\" graphql:\"medication\""
-		Dosage struct {
-			Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
-			Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
-		} "json:\"dosage\" graphql:\"dosage\""
-		Quantity int "json:\"quantity\" graphql:\"quantity\""
 	} "json:\"getProduct\" graphql:\"getProduct\""
 }
 
@@ -68,12 +68,12 @@ const GetProductsDocument = `query GetProducts ($type: ProductType!) {
 				... ProductParts
 				medication {
 					name
-				}
-				dosage {
+					dosage {
+						quantity
+						unit
+					}
 					quantity
-					unit
 				}
-				quantity
 			}
 		}
 		next_token
@@ -105,12 +105,12 @@ const GetProductDocument = `query GetProduct ($id: ID!) {
 			... ProductParts
 			medication {
 				name
-			}
-			dosage {
+				dosage {
+					quantity
+					unit
+				}
 				quantity
-				unit
 			}
-			quantity
 		}
 	}
 }

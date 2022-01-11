@@ -22,7 +22,9 @@ type Dosage struct {
 }
 
 type Medication struct {
-	Name *string `json:"name,omitempty"`
+	Name     *string `json:"name,omitempty"`
+	Dosage   *Dosage `json:"dosage,omitempty"`
+	Quantity *int    `json:"quantity,omitempty"`
 }
 
 type MedicinalProduct struct {
@@ -30,12 +32,10 @@ type MedicinalProduct struct {
 	Name       string      `json:"name"`
 	Price      int         `json:"price"`
 	Medication *Medication `json:"medication,omitempty"`
-	Dosage     *Dosage     `json:"dosage,omitempty"`
-	Quantity   int         `json:"quantity"`
 }
 
-func (MedicinalProduct) IsProduct()  {}
 func (MedicinalProduct) IsIProduct() {}
+func (MedicinalProduct) IsProduct()  {}
 
 type Products struct {
 	Items     []Product `json:"items,omitempty"`
