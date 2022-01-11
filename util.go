@@ -2,7 +2,7 @@ package nexusmed
 
 import (
 	"encoding/json"
-
+	"github.com/nexusmed/nexusmed-go/patients"
 	"github.com/nexusmed/nexusmed-go/consult"
 )
 
