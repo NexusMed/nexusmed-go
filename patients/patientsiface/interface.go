@@ -11,4 +11,7 @@ type PatientsAPI interface {
 
 	// Create a new patient
 	CreatePatient(patients.CreatePatientInput) (*patients.CreatePatient, error)
+
+	// Set the Authorization header
+	SetApiKey(key string)
 }
