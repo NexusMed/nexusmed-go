@@ -2,7 +2,7 @@ package nexusmed
 
 import (
 	"encoding/json"
-
+	"github.com/nexusmed/nexusmed-go/patients"
 	"github.com/nexusmed/nexusmed-go/consult"
 )
 
@@ -29,4 +29,12 @@ func AsynchronousConsultation(in interface{}) *consult.AsynchronousConsultation 
 	var aclt consult.AsynchronousConsultation
 	json.Unmarshal(b, &aclt)
 	return &aclt
+}
+
+// Patient converts interface{} to *consult.Patient
+func Patient(in interface{}) *patients.Patient {
+	b, _ := json.Marshal(in)
+	var pt patients.Patient
+	json.Unmarshal(b, &pt)
+	return &pt
 }
