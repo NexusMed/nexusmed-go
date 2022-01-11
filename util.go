@@ -2,8 +2,9 @@ package nexusmed
 
 import (
 	"encoding/json"
-	"github.com/nexusmed/nexusmed-go/patients"
+
 	"github.com/nexusmed/nexusmed-go/consult"
+	"github.com/nexusmed/nexusmed-go/patients"
 )
 
 // AnswerInputList converts []consult.AnswerInput to []*consult.AnswerInput
@@ -37,4 +38,9 @@ func Patient(in interface{}) *patients.Patient {
 	var pt patients.Patient
 	json.Unmarshal(b, &pt)
 	return &pt
+}
+
+// String returns a pointer to the string value passed in.
+func String(v string) *string {
+	return &v
 }
