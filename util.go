@@ -30,3 +30,11 @@ func AsynchronousConsultation(in interface{}) *consult.AsynchronousConsultation 
 	json.Unmarshal(b, &aclt)
 	return &aclt
 }
+
+// Patient converts interface{} to *consult.Patient
+func Patient(in interface{}) *patients.Patient {
+	b, _ := json.Marshal(in)
+	var pt patients.Patient
+	json.Unmarshal(b, &pt)
+	return &pt
+}
