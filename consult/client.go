@@ -11,7 +11,7 @@ type Client struct {
 }
 
 func New() *Client {
-	return &Client{client.New("/consult")}
+	return &Client{client.New("/consult/graphql")}
 }
 
 func (c *Client) SetApiKey(key string) {
@@ -208,11 +208,6 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -220,6 +215,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
