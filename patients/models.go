@@ -65,9 +65,9 @@ type Name struct {
 }
 
 type NameInput struct {
-	Title      *string `json:"title,omitempty"`
-	GivenName  string  `json:"given_name"`
-	FamilyName string  `json:"family_name"`
+	Title      *NamePrefix `json:"title,omitempty"`
+	GivenName  string      `json:"given_name"`
+	FamilyName string      `json:"family_name"`
 }
 
 type Patient struct {
@@ -147,6 +147,47 @@ func (e *GenderIdentity) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GenderIdentity) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type NamePrefix string
+
+const (
+	NamePrefixMr NamePrefix = "Mr"
+	NamePrefixMs NamePrefix = "Ms"
+)
+
+var AllNamePrefix = []NamePrefix{
+	NamePrefixMr,
+	NamePrefixMs,
+}
+
+func (e NamePrefix) IsValid() bool {
+	switch e {
+	case NamePrefixMr, NamePrefixMs:
+		return true
+	}
+	return false
+}
+
+func (e NamePrefix) String() string {
+	return string(e)
+}
+
+func (e *NamePrefix) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = NamePrefix(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid NamePrefix", str)
+	}
+	return nil
+}
+
+func (e NamePrefix) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

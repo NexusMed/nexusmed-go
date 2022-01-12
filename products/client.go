@@ -11,7 +11,7 @@ type Client struct {
 }
 
 func New() *Client {
-	return &Client{client.New("/products")}
+	return &Client{client.New("/products/graphql")}
 }
 
 func (c *Client) SetApiKey(key string) {
