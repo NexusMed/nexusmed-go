@@ -22,16 +22,16 @@ func NewGQLRequestInfo(r *Request) *GQLRequestInfo {
 	}
 }
 
-type IClient interface {
-	New(pathURL string, interceptors ...RequestInterceptor) *Client
-	SetApiKey(key string)
+type Url struct {
+	Base string
+	Path *string
 }
 
 // Client is the http client wrapper
 type Client struct {
 	Client             *http.Client
 	ApiKey             *string
-	BaseURL            string
+	Url                *Url
 	RequestInterceptor RequestInterceptor
 }
 
@@ -45,8 +45,11 @@ type Request struct {
 // New creates a new http client wrapper
 func New(pathURL string, interceptors ...RequestInterceptor) *Client {
 	return &Client{
-		Client:  http.DefaultClient,
-		BaseURL: "https://api.nexusmed.io" + pathURL,
+		Client: http.DefaultClient,
+		Url: &Url{
+			Base: "https://api.nexusmed.io",
+			Path: &pathURL,
+		},
 		RequestInterceptor: ChainInterceptor(append([]RequestInterceptor{func(ctx context.Context, requestSet *http.Request, gqlInfo *GQLRequestInfo, res interface{}, next RequestInterceptorFunc) error {
 			return next(ctx, requestSet, gqlInfo, res)
 		}}, interceptors...)...),
@@ -56,6 +59,11 @@ func New(pathURL string, interceptors ...RequestInterceptor) *Client {
 // SetApiKey sets the Authorization header
 func (c *Client) SetApiKey(key string) {
 	c.ApiKey = &key
+}
+
+// SetBaseUrl sets the BaseUrl
+func (c *Client) SetBaseUrl(url string) {
+	c.Url.Base = url
 }
 
 // GqlErrorList is the struct of a standard graphql error response
@@ -110,7 +118,12 @@ func (c *Client) Post(operationName, query string, respData interface{}, vars ma
 	}
 	ctx := context.Background()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURL, bytes.NewBuffer(requestBody))
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPost,
+		fmt.Sprintf("%s%s", c.Url.Base, *c.Url.Path),
+		bytes.NewBuffer(requestBody),
+	)
 	if err != nil {
 		return fmt.Errorf("create request struct failed: %w", err)
 	}
