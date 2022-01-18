@@ -34,8 +34,8 @@ type MedicinalProduct struct {
 	Medication *Medication `json:"medication,omitempty"`
 }
 
-func (MedicinalProduct) IsProduct()  {}
 func (MedicinalProduct) IsIProduct() {}
+func (MedicinalProduct) IsProduct()  {}
 
 type Products struct {
 	Items     []Product `json:"items,omitempty"`

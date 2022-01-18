@@ -31,17 +31,17 @@ type PatientParts struct {
 	Email       *string   "json:\"email\" graphql:\"email\""
 	Phone       *string   "json:\"phone\" graphql:\"phone\""
 	DateOfBirth *struct {
-		Day   int "json:\"day\" graphql:\"day\""
-		Month int "json:\"month\" graphql:\"month\""
-		Year  int "json:\"year\" graphql:\"year\""
+		Day   *int "json:\"day\" graphql:\"day\""
+		Month *int "json:\"month\" graphql:\"month\""
+		Year  *int "json:\"year\" graphql:\"year\""
 	} "json:\"date_of_birth\" graphql:\"date_of_birth\""
 	Sex     *SexAssignment  "json:\"sex\" graphql:\"sex\""
 	Gender  *GenderIdentity "json:\"gender\" graphql:\"gender\""
 	Address *struct {
-		Line1      string  "json:\"line1\" graphql:\"line1\""
+		Line1      *string "json:\"line1\" graphql:\"line1\""
 		Line2      *string "json:\"line2\" graphql:\"line2\""
 		City       *string "json:\"city\" graphql:\"city\""
-		PostalCode string  "json:\"postal_code\" graphql:\"postal_code\""
+		PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""
 		Country    *string "json:\"country\" graphql:\"country\""
 	} "json:\"address\" graphql:\"address\""
 	Stripe *struct {
@@ -68,17 +68,17 @@ type GetPatient struct {
 		Email       *string   "json:\"email\" graphql:\"email\""
 		Phone       *string   "json:\"phone\" graphql:\"phone\""
 		DateOfBirth *struct {
-			Day   int "json:\"day\" graphql:\"day\""
-			Month int "json:\"month\" graphql:\"month\""
-			Year  int "json:\"year\" graphql:\"year\""
+			Day   *int "json:\"day\" graphql:\"day\""
+			Month *int "json:\"month\" graphql:\"month\""
+			Year  *int "json:\"year\" graphql:\"year\""
 		} "json:\"date_of_birth\" graphql:\"date_of_birth\""
 		Sex     *SexAssignment  "json:\"sex\" graphql:\"sex\""
 		Gender  *GenderIdentity "json:\"gender\" graphql:\"gender\""
 		Address *struct {
-			Line1      string  "json:\"line1\" graphql:\"line1\""
+			Line1      *string "json:\"line1\" graphql:\"line1\""
 			Line2      *string "json:\"line2\" graphql:\"line2\""
 			City       *string "json:\"city\" graphql:\"city\""
-			PostalCode string  "json:\"postal_code\" graphql:\"postal_code\""
+			PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""
 			Country    *string "json:\"country\" graphql:\"country\""
 		} "json:\"address\" graphql:\"address\""
 		Stripe *struct {
@@ -127,6 +127,21 @@ const GetPatientDocument = `query GetPatient ($id: ID!) {
 		}
 	}
 }
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
+}
+fragment PrescriptionParts on Prescription {
+	id
+	created_at
+	prescriber {
+		id
+		name {
+			... NameParts
+		}
+	}
+}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -150,21 +165,6 @@ fragment PatientParts on Patient {
 	}
 	stripe {
 		id
-	}
-}
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
-fragment PrescriptionParts on Prescription {
-	id
-	created_at
-	prescriber {
-		id
-		name {
-			... NameParts
-		}
 	}
 }
 `

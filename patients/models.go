@@ -13,10 +13,10 @@ type Consultation interface {
 }
 
 type Address struct {
-	Line1      string  `json:"line1"`
+	Line1      *string `json:"line1,omitempty"`
 	Line2      *string `json:"line2,omitempty"`
 	City       *string `json:"city,omitempty"`
-	PostalCode string  `json:"postal_code"`
+	PostalCode *string `json:"postal_code,omitempty"`
 	Country    *string `json:"country,omitempty"`
 }
 
@@ -47,9 +47,9 @@ type CreatePatientInput struct {
 }
 
 type DateOfBirth struct {
-	Day   int `json:"day"`
-	Month int `json:"month"`
-	Year  int `json:"year"`
+	Day   *int `json:"day,omitempty"`
+	Month *int `json:"month,omitempty"`
+	Year  *int `json:"year,omitempty"`
 }
 
 type DateOfBirthInput struct {
