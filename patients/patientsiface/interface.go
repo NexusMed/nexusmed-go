@@ -1,16 +1,19 @@
 package patientsiface
 
-import "github.com/nexusmed/nexusmed-go/patients"
+import (
+	"github.com/nexusmed/nexusmed-go/client"
+	"github.com/nexusmed/nexusmed-go/patients"
+)
 
 type PatientsAPI interface {
 	// Get patient by Id
-	GetPatient(id string) (*patients.GetPatient, error)
+	GetPatient(id string, interceptors ...client.RequestInterceptor) (*patients.GetPatient, error)
 
 	// Get paginated patients
-	GetPatients(limit *int, nextToken *string) (*patients.GetPatients, error)
+	GetPatients(limit *int, nextToken *string, interceptors ...client.RequestInterceptor) (*patients.GetPatients, error)
 
 	// Create a new patient
-	CreatePatient(patients.CreatePatientInput) (*patients.CreatePatient, error)
+	CreatePatient(patients.CreatePatientInput, ...client.RequestInterceptor) (*patients.CreatePatient, error)
 
 	// Set the Authorization header
 	SetApiKey(key string)
