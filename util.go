@@ -5,6 +5,7 @@ import (
 
 	"github.com/nexusmed/nexusmed-go/consult"
 	"github.com/nexusmed/nexusmed-go/patients"
+	"github.com/nexusmed/nexusmed-go/shipping"
 )
 
 // AnswerInputList converts []consult.AnswerInput to []*consult.AnswerInput
@@ -38,6 +39,14 @@ func Patient(in interface{}) *patients.Patient {
 	var pt patients.Patient
 	json.Unmarshal(b, &pt)
 	return &pt
+}
+
+// Shipment converts interface{} to *shipping.Shipment
+func Shipment(in interface{}) *shipping.Shipment {
+	var shp shipping.Shipment
+	b, _ := json.Marshal(in)
+	json.Unmarshal(b, &shp)
+	return &shp
 }
 
 // String returns a pointer to the string value passed in.
