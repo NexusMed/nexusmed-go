@@ -171,7 +171,7 @@ func (c *Client) GetPatient(id string, interceptors ...client.RequestInterceptor
 	}
 
 	var res GetPatient
-	if err := c.Client.Post("GetPatient", GetPatientDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetPatient", GetPatientDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -225,7 +225,7 @@ func (c *Client) GetPatients(limit *int, nextToken *string, interceptors ...clie
 	}
 
 	var res GetPatients
-	if err := c.Client.Post("GetPatients", GetPatientsDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetPatients", GetPatientsDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -236,11 +236,6 @@ const CreatePatientDocument = `mutation CreatePatient ($input: CreatePatientInpu
 	createPatient(input: $input) {
 		... PatientParts
 	}
-}
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
 }
 fragment PatientParts on Patient {
 	id
@@ -267,6 +262,11 @@ fragment PatientParts on Patient {
 		id
 	}
 }
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
+}
 `
 
 func (c *Client) CreatePatient(input CreatePatientInput, interceptors ...client.RequestInterceptor) (*CreatePatient, error) {
@@ -275,7 +275,7 @@ func (c *Client) CreatePatient(input CreatePatientInput, interceptors ...client.
 	}
 
 	var res CreatePatient
-	if err := c.Client.Post("CreatePatient", CreatePatientDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreatePatient", CreatePatientDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 

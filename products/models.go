@@ -35,8 +35,8 @@ type MedicinalProduct struct {
 	ConsultFee *int        `json:"consult_fee,omitempty"`
 }
 
-func (MedicinalProduct) IsIProduct() {}
 func (MedicinalProduct) IsProduct()  {}
+func (MedicinalProduct) IsIProduct() {}
 
 type Products struct {
 	Items     []Product `json:"items,omitempty"`

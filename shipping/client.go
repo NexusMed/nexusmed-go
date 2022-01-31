@@ -128,7 +128,7 @@ func (c *Client) GetShipment(id string, interceptors ...client.RequestIntercepto
 	}
 
 	var res GetShipment
-	if err := c.Client.Post("GetShipment", GetShipmentDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetShipment", GetShipmentDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -156,19 +156,6 @@ const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentI
 		created_at
 	}
 }
-fragment ProductParts on Product {
-	id
-	name
-	quantity
-}
-fragment PatientParts on Patient {
-	id
-	name {
-		title
-		given_name
-		family_name
-	}
-}
 fragment AddressParts on Address {
 	line1
 	line2
@@ -183,6 +170,19 @@ fragment SenderParts on Sender {
 		}
 	}
 }
+fragment ProductParts on Product {
+	id
+	name
+	quantity
+}
+fragment PatientParts on Patient {
+	id
+	name {
+		title
+		given_name
+		family_name
+	}
+}
 `
 
 func (c *Client) CreateShipment(input CreateShipmentInput, interceptors ...client.RequestInterceptor) (*CreateShipment, error) {
@@ -191,7 +191,7 @@ func (c *Client) CreateShipment(input CreateShipmentInput, interceptors ...clien
 	}
 
 	var res CreateShipment
-	if err := c.Client.Post("CreateShipment", CreateShipmentDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreateShipment", CreateShipmentDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 

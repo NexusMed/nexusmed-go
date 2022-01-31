@@ -111,7 +111,7 @@ func (c *Client) GetPayment(id string, interceptors ...client.RequestInterceptor
 	}
 
 	var res GetPayment
-	if err := c.Client.Post("GetPayment", GetPaymentDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetPayment", GetPaymentDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -152,7 +152,7 @@ func (c *Client) CreatePayment(input CreatePaymentInput, interceptors ...client.
 	}
 
 	var res CreatePayment
-	if err := c.Client.Post("CreatePayment", CreatePaymentDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreatePayment", CreatePaymentDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 

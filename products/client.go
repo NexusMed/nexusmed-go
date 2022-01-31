@@ -88,7 +88,7 @@ func (c *Client) GetProducts(typeArg ProductType, interceptors ...client.Request
 	}
 
 	var res GetProducts
-	if err := c.Client.Post("GetProducts", GetProductsDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetProducts", GetProductsDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -123,7 +123,7 @@ func (c *Client) GetProduct(id string, interceptors ...client.RequestInterceptor
 	}
 
 	var res GetProduct
-	if err := c.Client.Post("GetProduct", GetProductDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetProduct", GetProductDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 

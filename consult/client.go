@@ -91,6 +91,11 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -98,11 +103,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
@@ -112,7 +112,7 @@ func (c *Client) GetQuestionnaire(id string, interceptors ...client.RequestInter
 	}
 
 	var res GetQuestionnaire
-	if err := c.Client.Post("GetQuestionnaire", GetQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("GetQuestionnaire", GetQuestionnaireDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -147,7 +147,7 @@ func (c *Client) CreateConsultation(input CreateConsultationInput, interceptors 
 	}
 
 	var res CreateConsultation
-	if err := c.Client.Post("CreateConsultation", CreateConsultationDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreateConsultation", CreateConsultationDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -163,11 +163,6 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -175,6 +170,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -184,7 +184,7 @@ func (c *Client) CreateQuestionnaire(input CreateQuestionnaireInput, interceptor
 	}
 
 	var res CreateQuestionnaire
-	if err := c.Client.Post("CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("CreateQuestionnaire", CreateQuestionnaireDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
@@ -227,7 +227,7 @@ func (c *Client) AnswerQuestionnaire(input AnswerQuestionnaireInput, interceptor
 	}
 
 	var res AnswerQuestionnaire
-	if err := c.Client.Post("AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars); err != nil {
+	if err := c.Client.Post("AnswerQuestionnaire", AnswerQuestionnaireDocument, &res, vars, interceptors...); err != nil {
 		return nil, err
 	}
 
