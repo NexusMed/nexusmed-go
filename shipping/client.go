@@ -3,47 +3,72 @@
 package shipping
 
 import (
-"bytes"
-"context"
-"encoding/json"
-"fmt"
-"io"
-"io/ioutil"
-"net/http"
-"net/url"
-"path"
-"time"
-"github.com/nexusmed/nexusmed-go/graphqljson"
-"github.com/nexusmed/nexusmed-go/client")
+	"github.com/nexusmed/nexusmed-go/client"
+)
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+func New(interceptors ...client.RequestInterceptor) *client.Client {
+	return client.New("/shipping/graphql", interceptors...)
+}
 
+type Query struct {
+	GetShipment *Shipment "json:\"getShipment\" graphql:\"getShipment\""
+}
+type Mutation struct {
+	CreateShipment *Shipment "json:\"createShipment\" graphql:\"createShipment\""
+}
+type ProductParts struct {
+	ID       *string "json:\"id\" graphql:\"id\""
+	Name     *string "json:\"name\" graphql:\"name\""
+	Quantity *int    "json:\"quantity\" graphql:\"quantity\""
+}
+type PatientParts struct {
+	ID   *string "json:\"id\" graphql:\"id\""
+	Name *struct {
+		Title      *string "json:\"title\" graphql:\"title\""
+		GivenName  *string "json:\"given_name\" graphql:\"given_name\""
+		FamilyName *string "json:\"family_name\" graphql:\"family_name\""
+	} "json:\"name\" graphql:\"name\""
+}
+type AddressParts struct {
+	Line1      *string "json:\"line1\" graphql:\"line1\""
+	Line2      *string "json:\"line2\" graphql:\"line2\""
+	City       *string "json:\"city\" graphql:\"city\""
+	PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""
+}
+type SenderParts struct {
+	Pharmacy struct {
+		ID      string        "json:\"id\" graphql:\"id\""
+		Address *AddressParts "json:\"address\" graphql:\"address\""
+	} "graphql:\"... on Pharmacy\""
+}
+type GetShipment struct {
+	GetShipment *struct {
+		ID        string          "json:\"id\" graphql:\"id\""
+		Products  []*ProductParts "json:\"products\" graphql:\"products\""
+		Patient   *PatientParts   "json:\"patient\" graphql:\"patient\""
+		Address   *AddressParts   "json:\"address\" graphql:\"address\""
+		Courier   *Courier        "json:\"courier\" graphql:\"courier\""
+		Service   *Service        "json:\"service\" graphql:\"service\""
+		Status    *ShipmentStatus "json:\"status\" graphql:\"status\""
+		Sender    *SenderParts    "json:\"sender\" graphql:\"sender\""
+		CreatedAt *string         "json:\"created_at\" graphql:\"created_at\""
+	} "json:\"getShipment\" graphql:\"getShipment\""
+}
+type CreateShipment struct {
+	CreateShipment *struct {
+		ID        string          "json:\"id\" graphql:\"id\""
+		Products  []*ProductParts "json:\"products\" graphql:\"products\""
+		Patient   *PatientParts   "json:\"patient\" graphql:\"patient\""
+		Address   *AddressParts   "json:\"address\" graphql:\"address\""
+		Courier   *Courier        "json:\"courier\" graphql:\"courier\""
+		Service   *Service        "json:\"service\" graphql:\"service\""
+		Status    *ShipmentStatus "json:\"status\" graphql:\"status\""
+		Sender    *SenderParts    "json:\"sender\" graphql:\"sender\""
+		CreatedAt *string         "json:\"created_at\" graphql:\"created_at\""
+	} "json:\"createShipment\" graphql:\"createShipment\""
+}
 
-	
-	
-
-	func New(interceptors ...client.RequestInterceptor) *client.Client {
-		return client.New("/shipping/graphql", interceptors...}
-	}
-
-type Query struct{GetShipment *Shipment "json:\"getShipment\" graphql:\"getShipment\""}
-	type Mutation struct{CreateShipment *Shipment "json:\"createShipment\" graphql:\"createShipment\""}
-	type  ProductParts struct{ID *string "json:\"id\" graphql:\"id\""; Name *string "json:\"name\" graphql:\"name\""; Quantity *int "json:\"quantity\" graphql:\"quantity\""}
-	type  PatientParts struct{ID *string "json:\"id\" graphql:\"id\""; Name *struct{Title *string "json:\"title\" graphql:\"title\""; GivenName *string "json:\"given_name\" graphql:\"given_name\""; FamilyName *string "json:\"family_name\" graphql:\"family_name\""} "json:\"name\" graphql:\"name\""}
-	type  AddressParts struct{Line1 *string "json:\"line1\" graphql:\"line1\""; Line2 *string "json:\"line2\" graphql:\"line2\""; City *string "json:\"city\" graphql:\"city\""; PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""}
-	type  SenderParts struct{Pharmacy struct{ID string "json:\"id\" graphql:\"id\""; Address *AddressParts "json:\"address\" graphql:\"address\""} "graphql:\"... on Pharmacy\""}
-    type  GetShipment struct{GetShipment *struct{ID string "json:\"id\" graphql:\"id\""; Products []*ProductParts "json:\"products\" graphql:\"products\""; Patient *PatientParts "json:\"patient\" graphql:\"patient\""; Address *AddressParts "json:\"address\" graphql:\"address\""; Courier *Courier "json:\"courier\" graphql:\"courier\""; Service *Service "json:\"service\" graphql:\"service\""; Status *ShipmentStatus "json:\"status\" graphql:\"status\""; Sender *SenderParts "json:\"sender\" graphql:\"sender\""; CreatedAt *string "json:\"created_at\" graphql:\"created_at\""} "json:\"getShipment\" graphql:\"getShipment\""}
-    type  CreateShipment struct{CreateShipment *struct{ID string "json:\"id\" graphql:\"id\""; Products []*ProductParts "json:\"products\" graphql:\"products\""; Patient *PatientParts "json:\"patient\" graphql:\"patient\""; Address *AddressParts "json:\"address\" graphql:\"address\""; Courier *Courier "json:\"courier\" graphql:\"courier\""; Service *Service "json:\"service\" graphql:\"service\""; Status *ShipmentStatus "json:\"status\" graphql:\"status\""; Sender *SenderParts "json:\"sender\" graphql:\"sender\""; CreatedAt *string "json:\"created_at\" graphql:\"created_at\""} "json:\"createShipment\" graphql:\"createShipment\""}
-	const GetShipmentDocument = `query GetShipment ($id: ID!) {
+const GetShipmentDocument = `query GetShipment ($id: ID!) {
 	getShipment(id: $id) {
 		id
 		products {
@@ -64,11 +89,6 @@ type Query struct{GetShipment *Shipment "json:\"getShipment\" graphql:\"getShipm
 		created_at
 	}
 }
-fragment ProductParts on Product {
-	id
-	name
-	quantity
-}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -91,20 +111,27 @@ fragment SenderParts on Sender {
 		}
 	}
 }
+fragment ProductParts on Product {
+	id
+	name
+	quantity
+}
 `
-		func (c *Client) GetShipment (  id string) (*GetShipment, error) {
-			vars := map[string]interface{}{
-				"id": id,
-			}
 
-			var res GetShipment
-			if err := c.Client.Post("GetShipment", GetShipmentDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) GetShipment(id string) (*GetShipment, error) {
+	vars := map[string]interface{}{
+		"id": id,
+	}
 
-			return &res, nil
-		}
-	const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentInput!) {
+	var res GetShipment
+	if err := c.Client.Post("GetShipment", GetShipmentDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentInput!) {
 	createShipment(input: $input) {
 		id
 		products {
@@ -125,6 +152,14 @@ fragment SenderParts on Sender {
 		created_at
 	}
 }
+fragment SenderParts on Sender {
+	... on Pharmacy {
+		id
+		address {
+			... AddressParts
+		}
+	}
+}
 fragment ProductParts on Product {
 	id
 	name
@@ -144,24 +179,17 @@ fragment AddressParts on Address {
 	city
 	postal_code
 }
-fragment SenderParts on Sender {
-	... on Pharmacy {
-		id
-		address {
-			... AddressParts
-		}
-	}
-}
 `
-		func (c *Client) CreateShipment (  input CreateShipmentInput) (*CreateShipment, error) {
-			vars := map[string]interface{}{
-				"input": input,
-			}
 
-			var res CreateShipment
-			if err := c.Client.Post("CreateShipment", CreateShipmentDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) CreateShipment(input CreateShipmentInput) (*CreateShipment, error) {
+	vars := map[string]interface{}{
+		"input": input,
+	}
 
-			return &res, nil
-		}
+	var res CreateShipment
+	if err := c.Client.Post("CreateShipment", CreateShipmentDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

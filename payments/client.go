@@ -3,44 +3,70 @@
 package payments
 
 import (
-"bytes"
-"context"
-"encoding/json"
-"fmt"
-"io"
-"io/ioutil"
-"net/http"
-"net/url"
-"path"
-"time"
-"github.com/nexusmed/nexusmed-go/graphqljson"
-"github.com/nexusmed/nexusmed-go/client")
+	"github.com/nexusmed/nexusmed-go/client"
+)
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+func New(interceptors ...client.RequestInterceptor) *client.Client {
+	return client.New("/payments/graphql", interceptors...)
+}
 
+type Query struct {
+	GetPayment Payment "json:\"getPayment\" graphql:\"getPayment\""
+}
+type Mutation struct {
+	CreatePayment Payment "json:\"createPayment\" graphql:\"createPayment\""
+}
+type PaymentParts struct {
+	ID       string        "json:\"id\" graphql:\"id\""
+	Amount   int           "json:\"amount\" graphql:\"amount\""
+	Currency Currency      "json:\"currency\" graphql:\"currency\""
+	Status   PaymentStatus "json:\"status\" graphql:\"status\""
+}
+type GetPayment struct {
+	GetPayment *struct {
+		ID          string        "json:\"id\" graphql:\"id\""
+		Amount      int           "json:\"amount\" graphql:\"amount\""
+		Currency    Currency      "json:\"currency\" graphql:\"currency\""
+		Status      PaymentStatus "json:\"status\" graphql:\"status\""
+		Integration struct {
+			Typename *string "json:\"__typename\" graphql:\"__typename\""
+		} "json:\"integration\" graphql:\"integration\""
+		Consultation struct {
+			ID string "json:\"id\" graphql:\"id\""
+		} "json:\"consultation\" graphql:\"consultation\""
+		Prescription *struct {
+			ID       *string "json:\"id\" graphql:\"id\""
+			Products []*struct {
+				ID string "json:\"id\" graphql:\"id\""
+			} "json:\"products\" graphql:\"products\""
+		} "json:\"prescription\" graphql:\"prescription\""
+		Delivery struct {
+			ID       string "json:\"id\" graphql:\"id\""
+			Products []*struct {
+				ID string "json:\"id\" graphql:\"id\""
+			} "json:\"products\" graphql:\"products\""
+		} "json:\"delivery\" graphql:\"delivery\""
+	} "json:\"getPayment\" graphql:\"getPayment\""
+}
+type CreatePayment struct {
+	CreatePayment *struct {
+		ID          string        "json:\"id\" graphql:\"id\""
+		Amount      int           "json:\"amount\" graphql:\"amount\""
+		Currency    Currency      "json:\"currency\" graphql:\"currency\""
+		Status      PaymentStatus "json:\"status\" graphql:\"status\""
+		Integration struct {
+			ClientSecret string "json:\"client_secret\" graphql:\"client_secret\""
+		} "json:\"integration\" graphql:\"integration\""
+		Delivery struct {
+			ID string "json:\"id\" graphql:\"id\""
+		} "json:\"delivery\" graphql:\"delivery\""
+		Consultation struct {
+			ID string "json:\"id\" graphql:\"id\""
+		} "json:\"consultation\" graphql:\"consultation\""
+	} "json:\"createPayment\" graphql:\"createPayment\""
+}
 
-	
-	
-
-	func New(interceptors ...client.RequestInterceptor) *client.Client {
-		return client.New("/payments/graphql", interceptors...}
-	}
-
-type Query struct{GetPayment Payment "json:\"getPayment\" graphql:\"getPayment\""}
-	type Mutation struct{CreatePayment Payment "json:\"createPayment\" graphql:\"createPayment\""}
-	type  PaymentParts struct{ID string "json:\"id\" graphql:\"id\""; Amount int "json:\"amount\" graphql:\"amount\""; Currency Currency "json:\"currency\" graphql:\"currency\""; Status PaymentStatus "json:\"status\" graphql:\"status\""}
-    type  GetPayment struct{GetPayment *struct{ID string "json:\"id\" graphql:\"id\""; Amount int "json:\"amount\" graphql:\"amount\""; Currency Currency "json:\"currency\" graphql:\"currency\""; Status PaymentStatus "json:\"status\" graphql:\"status\""; Integration struct{Typename *string "json:\"__typename\" graphql:\"__typename\""} "json:\"integration\" graphql:\"integration\""; Consultation struct{ID string "json:\"id\" graphql:\"id\""} "json:\"consultation\" graphql:\"consultation\""; Prescription *struct{ID *string "json:\"id\" graphql:\"id\""; Products []*struct{ID string "json:\"id\" graphql:\"id\""} "json:\"products\" graphql:\"products\""} "json:\"prescription\" graphql:\"prescription\""; Delivery struct{ID string "json:\"id\" graphql:\"id\""; Products []*struct{ID string "json:\"id\" graphql:\"id\""} "json:\"products\" graphql:\"products\""} "json:\"delivery\" graphql:\"delivery\""} "json:\"getPayment\" graphql:\"getPayment\""}
-    type  CreatePayment struct{CreatePayment *struct{ID string "json:\"id\" graphql:\"id\""; Amount int "json:\"amount\" graphql:\"amount\""; Currency Currency "json:\"currency\" graphql:\"currency\""; Status PaymentStatus "json:\"status\" graphql:\"status\""; Integration struct{ClientSecret string "json:\"client_secret\" graphql:\"client_secret\""} "json:\"integration\" graphql:\"integration\""; Delivery struct{ID string "json:\"id\" graphql:\"id\""} "json:\"delivery\" graphql:\"delivery\""; Consultation struct{ID string "json:\"id\" graphql:\"id\""} "json:\"consultation\" graphql:\"consultation\""} "json:\"createPayment\" graphql:\"createPayment\""}
-	const GetPaymentDocument = `query GetPayment ($id: ID!) {
+const GetPaymentDocument = `query GetPayment ($id: ID!) {
 	getPayment(id: $id) {
 		... on CombinedPayment {
 			... PaymentParts
@@ -74,19 +100,21 @@ fragment PaymentParts on IPayment {
 	status
 }
 `
-		func (c *Client) GetPayment (  id string) (*GetPayment, error) {
-			vars := map[string]interface{}{
-				"id": id,
-			}
 
-			var res GetPayment
-			if err := c.Client.Post("GetPayment", GetPaymentDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) GetPayment(id string) (*GetPayment, error) {
+	vars := map[string]interface{}{
+		"id": id,
+	}
 
-			return &res, nil
-		}
-	const CreatePaymentDocument = `mutation CreatePayment ($input: CreatePaymentInput!) {
+	var res GetPayment
+	if err := c.Client.Post("GetPayment", GetPaymentDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+const CreatePaymentDocument = `mutation CreatePayment ($input: CreatePaymentInput!) {
 	createPayment(input: $input) {
 		... on CombinedPayment {
 			... PaymentParts
@@ -113,15 +141,16 @@ fragment PaymentParts on IPayment {
 	status
 }
 `
-		func (c *Client) CreatePayment (  input CreatePaymentInput) (*CreatePayment, error) {
-			vars := map[string]interface{}{
-				"input": input,
-			}
 
-			var res CreatePayment
-			if err := c.Client.Post("CreatePayment", CreatePaymentDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) CreatePayment(input CreatePaymentInput) (*CreatePayment, error) {
+	vars := map[string]interface{}{
+		"input": input,
+	}
 
-			return &res, nil
-		}
+	var res CreatePayment
+	if err := c.Client.Post("CreatePayment", CreatePaymentDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

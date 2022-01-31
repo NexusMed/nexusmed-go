@@ -3,43 +3,57 @@
 package products
 
 import (
-"bytes"
-"context"
-"encoding/json"
-"fmt"
-"io"
-"io/ioutil"
-"net/http"
-"net/url"
-"path"
-"time"
-"github.com/nexusmed/nexusmed-go/graphqljson"
-"github.com/nexusmed/nexusmed-go/client")
+	"github.com/nexusmed/nexusmed-go/client"
+)
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+func New(interceptors ...client.RequestInterceptor) *client.Client {
+	return client.New("/products/graphql", interceptors...)
+}
 
+type Query struct {
+	GetProduct  Product   "json:\"getProduct\" graphql:\"getProduct\""
+	GetProducts *Products "json:\"getProducts\" graphql:\"getProducts\""
+}
+type ProductParts struct {
+	ID    string "json:\"id\" graphql:\"id\""
+	Name  string "json:\"name\" graphql:\"name\""
+	Price int    "json:\"price\" graphql:\"price\""
+}
+type GetProducts struct {
+	GetProducts *struct {
+		Items []*struct {
+			ID         string "json:\"id\" graphql:\"id\""
+			Name       string "json:\"name\" graphql:\"name\""
+			Price      int    "json:\"price\" graphql:\"price\""
+			Medication struct {
+				Name   *string "json:\"name\" graphql:\"name\""
+				Dosage *struct {
+					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+					Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+				} "json:\"dosage\" graphql:\"dosage\""
+				Quantity *int "json:\"quantity\" graphql:\"quantity\""
+			} "json:\"medication\" graphql:\"medication\""
+		} "json:\"items\" graphql:\"items\""
+		NextToken *string "json:\"next_token\" graphql:\"next_token\""
+	} "json:\"getProducts\" graphql:\"getProducts\""
+}
+type GetProduct struct {
+	GetProduct *struct {
+		ID         string "json:\"id\" graphql:\"id\""
+		Name       string "json:\"name\" graphql:\"name\""
+		Price      int    "json:\"price\" graphql:\"price\""
+		Medication struct {
+			Name   *string "json:\"name\" graphql:\"name\""
+			Dosage *struct {
+				Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+				Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+			} "json:\"dosage\" graphql:\"dosage\""
+			Quantity *int "json:\"quantity\" graphql:\"quantity\""
+		} "json:\"medication\" graphql:\"medication\""
+	} "json:\"getProduct\" graphql:\"getProduct\""
+}
 
-	
-	
-
-	func New(interceptors ...client.RequestInterceptor) *client.Client {
-		return client.New("/products/graphql", interceptors...}
-	}
-
-type Query struct{GetProduct Product "json:\"getProduct\" graphql:\"getProduct\""; GetProducts *Products "json:\"getProducts\" graphql:\"getProducts\""}
-	type  ProductParts struct{ID string "json:\"id\" graphql:\"id\""; Name string "json:\"name\" graphql:\"name\""; Price int "json:\"price\" graphql:\"price\""}
-    type  GetProducts struct{GetProducts *struct{Items []*struct{ID string "json:\"id\" graphql:\"id\""; Name string "json:\"name\" graphql:\"name\""; Price int "json:\"price\" graphql:\"price\""; Medication struct{Name *string "json:\"name\" graphql:\"name\""; Dosage *struct{Quantity *float64 "json:\"quantity\" graphql:\"quantity\""; Unit *DosageUnit "json:\"unit\" graphql:\"unit\""} "json:\"dosage\" graphql:\"dosage\""; Quantity *int "json:\"quantity\" graphql:\"quantity\""} "json:\"medication\" graphql:\"medication\""} "json:\"items\" graphql:\"items\""; NextToken *string "json:\"next_token\" graphql:\"next_token\""} "json:\"getProducts\" graphql:\"getProducts\""}
-    type  GetProduct struct{GetProduct *struct{ID string "json:\"id\" graphql:\"id\""; Name string "json:\"name\" graphql:\"name\""; Price int "json:\"price\" graphql:\"price\""; Medication struct{Name *string "json:\"name\" graphql:\"name\""; Dosage *struct{Quantity *float64 "json:\"quantity\" graphql:\"quantity\""; Unit *DosageUnit "json:\"unit\" graphql:\"unit\""} "json:\"dosage\" graphql:\"dosage\""; Quantity *int "json:\"quantity\" graphql:\"quantity\""} "json:\"medication\" graphql:\"medication\""} "json:\"getProduct\" graphql:\"getProduct\""}
-	const GetProductsDocument = `query GetProducts ($type: ProductType!) {
+const GetProductsDocument = `query GetProducts ($type: ProductType!) {
 	getProducts(type: $type) {
 		items {
 			... on MedicinalProduct {
@@ -63,19 +77,21 @@ fragment ProductParts on IProduct {
 	price
 }
 `
-		func (c *Client) GetProducts (  typeArg ProductType) (*GetProducts, error) {
-			vars := map[string]interface{}{
-				"type": typeArg,
-			}
 
-			var res GetProducts
-			if err := c.Client.Post("GetProducts", GetProductsDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) GetProducts(typeArg ProductType) (*GetProducts, error) {
+	vars := map[string]interface{}{
+		"type": typeArg,
+	}
 
-			return &res, nil
-		}
-	const GetProductDocument = `query GetProduct ($id: ID!) {
+	var res GetProducts
+	if err := c.Client.Post("GetProducts", GetProductsDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+const GetProductDocument = `query GetProduct ($id: ID!) {
 	getProduct(id: $id) {
 		... on MedicinalProduct {
 			... ProductParts
@@ -96,15 +112,16 @@ fragment ProductParts on IProduct {
 	price
 }
 `
-		func (c *Client) GetProduct (  id string) (*GetProduct, error) {
-			vars := map[string]interface{}{
-				"id": id,
-			}
 
-			var res GetProduct
-			if err := c.Client.Post("GetProduct", GetProductDocument, &res, vars); err != nil {
-				return nil, err
-			}
+func (c *Client) GetProduct(id string) (*GetProduct, error) {
+	vars := map[string]interface{}{
+		"id": id,
+	}
 
-			return &res, nil
-		}
+	var res GetProduct
+	if err := c.Client.Post("GetProduct", GetProductDocument, &res, vars); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
