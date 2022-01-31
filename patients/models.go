@@ -75,6 +75,7 @@ type Patient struct {
 	Name          *Name           `json:"name,omitempty"`
 	Email         *string         `json:"email,omitempty"`
 	Phone         *string         `json:"phone,omitempty"`
+	CreatedAt     string          `json:"created_at"`
 	DateOfBirth   *DateOfBirth    `json:"date_of_birth,omitempty"`
 	Sex           *SexAssignment  `json:"sex,omitempty"`
 	Gender        *GenderIdentity `json:"gender,omitempty"`

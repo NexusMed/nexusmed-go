@@ -237,6 +237,8 @@ const (
 	ConsultationStatusConfirmed  ConsultationStatus = "confirmed"
 	ConsultationStatusAssigned   ConsultationStatus = "assigned"
 	ConsultationStatusUnassigned ConsultationStatus = "unassigned"
+	ConsultationStatusAccepted   ConsultationStatus = "accepted"
+	ConsultationStatusRejected   ConsultationStatus = "rejected"
 	ConsultationStatusStarted    ConsultationStatus = "started"
 	ConsultationStatusAbandoned  ConsultationStatus = "abandoned"
 	ConsultationStatusCompleted  ConsultationStatus = "completed"
@@ -249,6 +251,8 @@ var AllConsultationStatus = []ConsultationStatus{
 	ConsultationStatusConfirmed,
 	ConsultationStatusAssigned,
 	ConsultationStatusUnassigned,
+	ConsultationStatusAccepted,
+	ConsultationStatusRejected,
 	ConsultationStatusStarted,
 	ConsultationStatusAbandoned,
 	ConsultationStatusCompleted,
@@ -258,7 +262,7 @@ var AllConsultationStatus = []ConsultationStatus{
 
 func (e ConsultationStatus) IsValid() bool {
 	switch e {
-	case ConsultationStatusPending, ConsultationStatusConfirmed, ConsultationStatusAssigned, ConsultationStatusUnassigned, ConsultationStatusStarted, ConsultationStatusAbandoned, ConsultationStatusCompleted, ConsultationStatusExpired, ConsultationStatusCancelled:
+	case ConsultationStatusPending, ConsultationStatusConfirmed, ConsultationStatusAssigned, ConsultationStatusUnassigned, ConsultationStatusAccepted, ConsultationStatusRejected, ConsultationStatusStarted, ConsultationStatusAbandoned, ConsultationStatusCompleted, ConsultationStatusExpired, ConsultationStatusCancelled:
 		return true
 	}
 	return false

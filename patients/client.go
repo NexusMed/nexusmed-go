@@ -127,21 +127,6 @@ const GetPatientDocument = `query GetPatient ($id: ID!) {
 		}
 	}
 }
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
-fragment PrescriptionParts on Prescription {
-	id
-	created_at
-	prescriber {
-		id
-		name {
-			... NameParts
-		}
-	}
-}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -165,6 +150,21 @@ fragment PatientParts on Patient {
 	}
 	stripe {
 		id
+	}
+}
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
+}
+fragment PrescriptionParts on Prescription {
+	id
+	created_at
+	prescriber {
+		id
+		name {
+			... NameParts
+		}
 	}
 }
 `

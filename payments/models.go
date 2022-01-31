@@ -46,8 +46,8 @@ type CombinedPayment struct {
 	Delivery     Delivery           `json:"delivery,omitempty"`
 }
 
-func (CombinedPayment) IsIPayment() {}
 func (CombinedPayment) IsPayment()  {}
+func (CombinedPayment) IsIPayment() {}
 
 type Consultation struct {
 	ID       string      `json:"id"`
@@ -67,8 +67,8 @@ type ConsultationPayment struct {
 	Consultation *Consultation      `json:"consultation,omitempty"`
 }
 
-func (ConsultationPayment) IsIPayment() {}
 func (ConsultationPayment) IsPayment()  {}
+func (ConsultationPayment) IsIPayment() {}
 
 type CreatePaymentInput struct {
 	Type         PaymentType              `json:"type"`
@@ -81,7 +81,7 @@ type CreatePaymentInput struct {
 }
 
 type DeliveryAddressInput struct {
-	Line1      *string `json:"line1,omitempty"`
+	Line1      string  `json:"line1"`
 	Line2      *string `json:"line2,omitempty"`
 	City       *string `json:"city,omitempty"`
 	PostalCode string  `json:"postal_code"`
@@ -150,11 +150,12 @@ type RedirectIntegrationInput struct {
 }
 
 type Shipment struct {
-	ID       string     `json:"id"`
-	Courier  *Courier   `json:"courier,omitempty"`
-	Tracking *Tracking  `json:"tracking,omitempty"`
-	Products []*Product `json:"products,omitempty"`
-	Sender   Sender     `json:"sender,omitempty"`
+	ID       string           `json:"id"`
+	Courier  *Courier         `json:"courier,omitempty"`
+	Service  *DeliveryService `json:"service,omitempty"`
+	Tracking *Tracking        `json:"tracking,omitempty"`
+	Products []*Product       `json:"products,omitempty"`
+	Sender   Sender           `json:"sender,omitempty"`
 }
 
 func (Shipment) IsDelivery() {}
