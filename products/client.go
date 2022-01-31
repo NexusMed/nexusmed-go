@@ -82,7 +82,7 @@ fragment ProductParts on IProduct {
 }
 `
 
-func (c *Client) GetProducts(typeArg ProductType) (*GetProducts, error) {
+func (c *Client) GetProducts(typeArg ProductType, interceptors ...client.RequestInterceptor) (*GetProducts, error) {
 	vars := map[string]interface{}{
 		"type": typeArg,
 	}
@@ -117,7 +117,7 @@ fragment ProductParts on IProduct {
 }
 `
 
-func (c *Client) GetProduct(id string) (*GetProduct, error) {
+func (c *Client) GetProduct(id string, interceptors ...client.RequestInterceptor) (*GetProduct, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}

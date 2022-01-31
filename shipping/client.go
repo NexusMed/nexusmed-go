@@ -93,6 +93,11 @@ const GetShipmentDocument = `query GetShipment ($id: ID!) {
 		created_at
 	}
 }
+fragment ProductParts on Product {
+	id
+	name
+	quantity
+}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -115,14 +120,9 @@ fragment SenderParts on Sender {
 		}
 	}
 }
-fragment ProductParts on Product {
-	id
-	name
-	quantity
-}
 `
 
-func (c *Client) GetShipment(id string) (*GetShipment, error) {
+func (c *Client) GetShipment(id string, interceptors ...client.RequestInterceptor) (*GetShipment, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
@@ -185,7 +185,7 @@ fragment SenderParts on Sender {
 }
 `
 
-func (c *Client) CreateShipment(input CreateShipmentInput) (*CreateShipment, error) {
+func (c *Client) CreateShipment(input CreateShipmentInput, interceptors ...client.RequestInterceptor) (*CreateShipment, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}

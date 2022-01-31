@@ -165,7 +165,7 @@ fragment PrescriptionParts on Prescription {
 }
 `
 
-func (c *Client) GetPatient(id string) (*GetPatient, error) {
+func (c *Client) GetPatient(id string, interceptors ...client.RequestInterceptor) (*GetPatient, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
@@ -218,7 +218,7 @@ fragment NameParts on Name {
 }
 `
 
-func (c *Client) GetPatients(limit *int, nextToken *string) (*GetPatients, error) {
+func (c *Client) GetPatients(limit *int, nextToken *string, interceptors ...client.RequestInterceptor) (*GetPatients, error) {
 	vars := map[string]interface{}{
 		"limit":      limit,
 		"next_token": nextToken,
@@ -236,6 +236,11 @@ const CreatePatientDocument = `mutation CreatePatient ($input: CreatePatientInpu
 	createPatient(input: $input) {
 		... PatientParts
 	}
+}
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
 }
 fragment PatientParts on Patient {
 	id
@@ -262,14 +267,9 @@ fragment PatientParts on Patient {
 		id
 	}
 }
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
 `
 
-func (c *Client) CreatePatient(input CreatePatientInput) (*CreatePatient, error) {
+func (c *Client) CreatePatient(input CreatePatientInput, interceptors ...client.RequestInterceptor) (*CreatePatient, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}

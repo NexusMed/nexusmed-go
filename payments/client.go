@@ -105,7 +105,7 @@ fragment PaymentParts on IPayment {
 }
 `
 
-func (c *Client) GetPayment(id string) (*GetPayment, error) {
+func (c *Client) GetPayment(id string, interceptors ...client.RequestInterceptor) (*GetPayment, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
@@ -146,7 +146,7 @@ fragment PaymentParts on IPayment {
 }
 `
 
-func (c *Client) CreatePayment(input CreatePaymentInput) (*CreatePayment, error) {
+func (c *Client) CreatePayment(input CreatePaymentInput, interceptors ...client.RequestInterceptor) (*CreatePayment, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}

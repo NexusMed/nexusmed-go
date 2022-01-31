@@ -106,7 +106,7 @@ fragment AnswerParts on Answer {
 }
 `
 
-func (c *Client) GetQuestionnaire(id string) (*GetQuestionnaire, error) {
+func (c *Client) GetQuestionnaire(id string, interceptors ...client.RequestInterceptor) (*GetQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"id": id,
 	}
@@ -141,7 +141,7 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 }
 `
 
-func (c *Client) CreateConsultation(input CreateConsultationInput) (*CreateConsultation, error) {
+func (c *Client) CreateConsultation(input CreateConsultationInput, interceptors ...client.RequestInterceptor) (*CreateConsultation, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
@@ -178,7 +178,7 @@ fragment QuestionParts on Question {
 }
 `
 
-func (c *Client) CreateQuestionnaire(input CreateQuestionnaireInput) (*CreateQuestionnaire, error) {
+func (c *Client) CreateQuestionnaire(input CreateQuestionnaireInput, interceptors ...client.RequestInterceptor) (*CreateQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
@@ -221,7 +221,7 @@ fragment AnswerParts on Answer {
 }
 `
 
-func (c *Client) AnswerQuestionnaire(input AnswerQuestionnaireInput) (*AnswerQuestionnaire, error) {
+func (c *Client) AnswerQuestionnaire(input AnswerQuestionnaireInput, interceptors ...client.RequestInterceptor) (*AnswerQuestionnaire, error) {
 	vars := map[string]interface{}{
 		"input": input,
 	}
