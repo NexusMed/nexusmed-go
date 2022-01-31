@@ -129,10 +129,9 @@ func (c *Client) Post(operationName, query string, respData interface{}, vars ma
 	}
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("Accept", "application/json; charset=utf-8")
-	if *c.ApiKey == "" {
-		return fmt.Errorf("Authorization header not set with client.SetApiKey()")
+	if c.ApiKey != nil && *c.ApiKey != "" {
+		req.Header.Set("Authorization", *c.ApiKey)
 	}
-	req.Header.Set("Authorization", *c.ApiKey)
 
 	f := ChainInterceptor(append([]RequestInterceptor{c.RequestInterceptor}, interceptors...)...)
 
