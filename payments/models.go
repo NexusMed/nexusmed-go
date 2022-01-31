@@ -46,8 +46,8 @@ type CombinedPayment struct {
 	Delivery     Delivery           `json:"delivery,omitempty"`
 }
 
-func (CombinedPayment) IsIPayment() {}
 func (CombinedPayment) IsPayment()  {}
+func (CombinedPayment) IsIPayment() {}
 
 type Consultation struct {
 	ID       string      `json:"id"`

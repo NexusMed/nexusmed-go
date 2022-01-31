@@ -6,8 +6,12 @@ import (
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
-func New(interceptors ...client.RequestInterceptor) *client.Client {
-	return client.New("/shipping/graphql", interceptors...)
+type Client struct {
+	*client.Client
+}
+
+func New(interceptors ...client.RequestInterceptor) *Client {
+	return &Client{client.New("/shipping/graphql", interceptors...)}
 }
 
 type Query struct {
@@ -152,14 +156,6 @@ const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentI
 		created_at
 	}
 }
-fragment SenderParts on Sender {
-	... on Pharmacy {
-		id
-		address {
-			... AddressParts
-		}
-	}
-}
 fragment ProductParts on Product {
 	id
 	name
@@ -178,6 +174,14 @@ fragment AddressParts on Address {
 	line2
 	city
 	postal_code
+}
+fragment SenderParts on Sender {
+	... on Pharmacy {
+		id
+		address {
+			... AddressParts
+		}
+	}
 }
 `
 

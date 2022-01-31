@@ -6,8 +6,12 @@ import (
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
-func New(interceptors ...client.RequestInterceptor) *client.Client {
-	return client.New("/consult/graphql", interceptors...)
+type Client struct {
+	*client.Client
+}
+
+func New(interceptors ...client.RequestInterceptor) *Client {
+	return &Client{client.New("/consult/graphql", interceptors...)}
 }
 
 type Query struct {
@@ -87,11 +91,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -99,6 +98,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -159,6 +163,11 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -166,11 +175,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 

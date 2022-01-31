@@ -6,8 +6,12 @@ import (
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
-func New(interceptors ...client.RequestInterceptor) *client.Client {
-	return client.New("/payments/graphql", interceptors...)
+type Client struct {
+	*client.Client
+}
+
+func New(interceptors ...client.RequestInterceptor) *Client {
+	return &Client{client.New("/payments/graphql", interceptors...)}
 }
 
 type Query struct {
