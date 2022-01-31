@@ -1,4 +1,4 @@
-package paymentsiface
+package shippingiface
 
 import (
 	"encoding/json"
