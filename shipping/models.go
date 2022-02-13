@@ -26,7 +26,7 @@ type Address struct {
 type AddressInput struct {
 	Line1      string  `json:"line1"`
 	Line2      *string `json:"line2,omitempty"`
-	City       *string `json:"city,omitempty"`
+	City       string  `json:"city"`
 	PostalCode string  `json:"postal_code"`
 }
 
@@ -171,6 +171,7 @@ const (
 	ShipmentStatusPending   ShipmentStatus = "pending"
 	ShipmentStatusConfirmed ShipmentStatus = "confirmed"
 	ShipmentStatusPrepared  ShipmentStatus = "prepared"
+	ShipmentStatusCollected ShipmentStatus = "collected"
 	ShipmentStatusEnRoute   ShipmentStatus = "en_route"
 	ShipmentStatusDelivered ShipmentStatus = "delivered"
 	ShipmentStatusReturned  ShipmentStatus = "returned"
@@ -180,6 +181,7 @@ var AllShipmentStatus = []ShipmentStatus{
 	ShipmentStatusPending,
 	ShipmentStatusConfirmed,
 	ShipmentStatusPrepared,
+	ShipmentStatusCollected,
 	ShipmentStatusEnRoute,
 	ShipmentStatusDelivered,
 	ShipmentStatusReturned,
@@ -187,7 +189,7 @@ var AllShipmentStatus = []ShipmentStatus{
 
 func (e ShipmentStatus) IsValid() bool {
 	switch e {
-	case ShipmentStatusPending, ShipmentStatusConfirmed, ShipmentStatusPrepared, ShipmentStatusEnRoute, ShipmentStatusDelivered, ShipmentStatusReturned:
+	case ShipmentStatusPending, ShipmentStatusConfirmed, ShipmentStatusPrepared, ShipmentStatusCollected, ShipmentStatusEnRoute, ShipmentStatusDelivered, ShipmentStatusReturned:
 		return true
 	}
 	return false

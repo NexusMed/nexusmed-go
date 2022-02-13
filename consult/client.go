@@ -29,6 +29,7 @@ type QuestionParts struct {
 	Index   int            "json:\"index\" graphql:\"index\""
 	Type    QuestionType   "json:\"type\" graphql:\"type\""
 	Text    string         "json:\"text\" graphql:\"text\""
+	Info    []*string      "json:\"info\" graphql:\"info\""
 	Answers []*AnswerParts "json:\"answers\" graphql:\"answers\""
 }
 type AnswerParts struct {
@@ -91,18 +92,19 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
 	text
+	info
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -167,6 +169,7 @@ fragment QuestionParts on Question {
 	index
 	type
 	text
+	info
 	answers {
 		... AnswerParts
 	}
@@ -210,6 +213,7 @@ fragment QuestionParts on Question {
 	index
 	type
 	text
+	info
 	answers {
 		... AnswerParts
 	}

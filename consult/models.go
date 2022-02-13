@@ -50,8 +50,8 @@ type AsynchronousConsultation struct {
 	QuestionnaireAnswers *QuestionnaireAnswers `json:"questionnaire_answers,omitempty"`
 }
 
-func (AsynchronousConsultation) IsConsultation()  {}
 func (AsynchronousConsultation) IsIConsultation() {}
+func (AsynchronousConsultation) IsConsultation()  {}
 
 type Cosmetic struct {
 	ID string `json:"id"`
@@ -135,6 +135,7 @@ type ProductInput struct {
 type Question struct {
 	Index    int          `json:"index"`
 	Text     string       `json:"text"`
+	Info     []*string    `json:"info,omitempty"`
 	Type     QuestionType `json:"type"`
 	Answers  []*Answer    `json:"answers,omitempty"`
 	Required *bool        `json:"required,omitempty"`
@@ -143,6 +144,7 @@ type Question struct {
 type QuestionInput struct {
 	Type    QuestionType    `json:"type"`
 	Text    string          `json:"text"`
+	Info    []*string       `json:"info,omitempty"`
 	Answers []*CreateAnswer `json:"answers,omitempty"`
 }
 

@@ -67,8 +67,8 @@ type ConsultationPayment struct {
 	Consultation *Consultation      `json:"consultation,omitempty"`
 }
 
-func (ConsultationPayment) IsIPayment() {}
 func (ConsultationPayment) IsPayment()  {}
+func (ConsultationPayment) IsIPayment() {}
 
 type CreatePaymentInput struct {
 	Type         PaymentType              `json:"type"`
@@ -83,7 +83,7 @@ type CreatePaymentInput struct {
 type DeliveryAddressInput struct {
 	Line1      string  `json:"line1"`
 	Line2      *string `json:"line2,omitempty"`
-	City       *string `json:"city,omitempty"`
+	City       string  `json:"city"`
 	PostalCode string  `json:"postal_code"`
 }
 
