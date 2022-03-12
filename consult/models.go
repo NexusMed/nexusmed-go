@@ -16,6 +16,10 @@ type IConsultation interface {
 	IsIConsultation()
 }
 
+type IProduct interface {
+	IsIProduct()
+}
+
 type Product interface {
 	IsProduct()
 }
@@ -52,10 +56,11 @@ func (AsynchronousConsultation) IsIConsultation() {}
 func (AsynchronousConsultation) IsConsultation()  {}
 
 type Cosmetic struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
-func (Cosmetic) IsProduct() {}
+func (Cosmetic) IsIProduct() {}
 
 type CreateAnswer struct {
 	Value  string `json:"value"`
@@ -74,17 +79,32 @@ type CreateQuestionnaireInput struct {
 	Questions []*QuestionInput `json:"questions,omitempty"`
 }
 
-type MedicalDevice struct {
-	ID string `json:"id"`
+type Dosage struct {
+	Quantity *float64    `json:"quantity,omitempty"`
+	Unit     *DosageUnit `json:"unit,omitempty"`
 }
 
-func (MedicalDevice) IsProduct() {}
+type MedicalDevice struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (MedicalDevice) IsIProduct() {}
+
+type Medication struct {
+	Name     *string `json:"name,omitempty"`
+	Dosage   *Dosage `json:"dosage,omitempty"`
+	Quantity *int    `json:"quantity,omitempty"`
+}
 
 type MedicinalProduct struct {
-	ID string `json:"id"`
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Medication *Medication `json:"medication,omitempty"`
 }
 
-func (MedicinalProduct) IsProduct() {}
+func (MedicinalProduct) IsProduct()  {}
+func (MedicinalProduct) IsIProduct() {}
 
 type Name struct {
 	Title      *string `json:"title,omitempty"`
@@ -164,10 +184,11 @@ type Register struct {
 }
 
 type Supplement struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
-func (Supplement) IsProduct() {}
+func (Supplement) IsIProduct() {}
 
 type ConsultationInputType string
 
@@ -268,6 +289,51 @@ func (e *ConsultationStatus) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ConsultationStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type DosageUnit string
+
+const (
+	DosageUnitMg  DosageUnit = "mg"
+	DosageUnitMcg DosageUnit = "mcg"
+	DosageUnitMl  DosageUnit = "ml"
+	DosageUnitIu  DosageUnit = "iu"
+)
+
+var AllDosageUnit = []DosageUnit{
+	DosageUnitMg,
+	DosageUnitMcg,
+	DosageUnitMl,
+	DosageUnitIu,
+}
+
+func (e DosageUnit) IsValid() bool {
+	switch e {
+	case DosageUnitMg, DosageUnitMcg, DosageUnitMl, DosageUnitIu:
+		return true
+	}
+	return false
+}
+
+func (e DosageUnit) String() string {
+	return string(e)
+}
+
+func (e *DosageUnit) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = DosageUnit(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid DosageUnit", str)
+	}
+	return nil
+}
+
+func (e DosageUnit) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

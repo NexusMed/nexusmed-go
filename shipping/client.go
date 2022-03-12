@@ -93,19 +93,6 @@ const GetShipmentDocument = `query GetShipment ($id: ID!) {
 		created_at
 	}
 }
-fragment ProductParts on Product {
-	id
-	name
-	quantity
-}
-fragment PatientParts on Patient {
-	id
-	name {
-		title
-		given_name
-		family_name
-	}
-}
 fragment AddressParts on Address {
 	line1
 	line2
@@ -118,6 +105,19 @@ fragment SenderParts on Sender {
 		address {
 			... AddressParts
 		}
+	}
+}
+fragment ProductParts on Product {
+	id
+	name
+	quantity
+}
+fragment PatientParts on Patient {
+	id
+	name {
+		title
+		given_name
+		family_name
 	}
 }
 `

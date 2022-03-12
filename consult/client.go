@@ -58,7 +58,20 @@ type CreateConsultation struct {
 			} "json:\"patient\" graphql:\"patient\""
 			Status   ConsultationStatus "json:\"status\" graphql:\"status\""
 			Products []*struct {
-				ID string "json:\"id\" graphql:\"id\""
+				IProduct struct {
+					ID   string "json:\"id\" graphql:\"id\""
+					Name string "json:\"name\" graphql:\"name\""
+				} "graphql:\"... on IProduct\""
+				MedicinalProduct struct {
+					Medication struct {
+						Name   *string "json:\"name\" graphql:\"name\""
+						Dosage *struct {
+							Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+							Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+						} "json:\"dosage\" graphql:\"dosage\""
+						Quantity *int "json:\"quantity\" graphql:\"quantity\""
+					} "json:\"medication\" graphql:\"medication\""
+				} "graphql:\"... on MedicinalProduct\""
 			} "json:\"products\" graphql:\"products\""
 			QuestionnaireAnswers struct {
 				ID string "json:\"id\" graphql:\"id\""
@@ -139,8 +152,19 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 			}
 			status
 			products {
-				... on MedicinalProduct {
+				... on IProduct {
 					id
+					name
+				}
+				... on MedicinalProduct {
+					medication {
+						name
+						dosage {
+							quantity
+							unit
+						}
+						quantity
+					}
 				}
 			}
 			questionnaire_answers {
