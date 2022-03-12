@@ -186,11 +186,6 @@ const GetPatientsDocument = `query GetPatients ($limit: Int, $next_token: String
 		next_token
 	}
 }
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -215,6 +210,11 @@ fragment PatientParts on Patient {
 	stripe {
 		id
 	}
+}
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
 }
 `
 
@@ -237,11 +237,6 @@ const CreatePatientDocument = `mutation CreatePatient ($input: CreatePatientInpu
 		... PatientParts
 	}
 }
-fragment NameParts on Name {
-	title
-	given_name
-	family_name
-}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -266,6 +261,11 @@ fragment PatientParts on Patient {
 	stripe {
 		id
 	}
+}
+fragment NameParts on Name {
+	title
+	given_name
+	family_name
 }
 `
 

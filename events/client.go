@@ -33,7 +33,7 @@ type GetEvent struct {
 		AccountID *string "json:\"account_id\" graphql:\"account_id\""
 		CreatedAt *string "json:\"created_at\" graphql:\"created_at\""
 		Data      *struct {
-			Object *string "json:\"object\" graphql:\"object\""
+			Object map[string]interface{} "json:\"object\" graphql:\"object\""
 		} "json:\"data\" graphql:\"data\""
 	} "json:\"getEvent\" graphql:\"getEvent\""
 }

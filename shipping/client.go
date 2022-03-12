@@ -156,6 +156,11 @@ const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentI
 		created_at
 	}
 }
+fragment ProductParts on Product {
+	id
+	name
+	quantity
+}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -177,11 +182,6 @@ fragment SenderParts on Sender {
 			... AddressParts
 		}
 	}
-}
-fragment ProductParts on Product {
-	id
-	name
-	quantity
 }
 `
 

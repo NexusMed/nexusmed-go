@@ -15,7 +15,7 @@ type CreateEndpointInput struct {
 }
 
 type Data struct {
-	Object *string `json:"object,omitempty"`
+	Object map[string]interface{} `json:"object,omitempty"`
 }
 
 type Endpoint struct {

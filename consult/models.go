@@ -48,8 +48,8 @@ type AsynchronousConsultation struct {
 	QuestionnaireAnswers *QuestionnaireAnswers `json:"questionnaire_answers,omitempty"`
 }
 
-func (AsynchronousConsultation) IsConsultation()  {}
 func (AsynchronousConsultation) IsIConsultation() {}
+func (AsynchronousConsultation) IsConsultation()  {}
 
 type Cosmetic struct {
 	ID string `json:"id"`
