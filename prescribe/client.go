@@ -46,34 +46,32 @@ type GetPrescription struct {
 			} "json:\"register\" graphql:\"register\""
 		} "json:\"prescriber\" graphql:\"prescriber\""
 		Pharmacy *struct {
-			ID       string  "json:\"id\" graphql:\"id\""
-			Name     *string "json:\"name\" graphql:\"name\""
+			ID       string "json:\"id\" graphql:\"id\""
 			Register *struct {
 				Type  *RegisterType "json:\"type\" graphql:\"type\""
 				Value *string       "json:\"value\" graphql:\"value\""
 			} "json:\"register\" graphql:\"register\""
-			Address *struct {
-				Line1      *string "json:\"line1\" graphql:\"line1\""
-				Line2      *string "json:\"line2\" graphql:\"line2\""
-				City       *string "json:\"city\" graphql:\"city\""
-				PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""
-			} "json:\"address\" graphql:\"address\""
+			Business *struct {
+				Name    *string "json:\"name\" graphql:\"name\""
+				Address *struct {
+					Line1      *string "json:\"line1\" graphql:\"line1\""
+					Line2      *string "json:\"line2\" graphql:\"line2\""
+					City       *string "json:\"city\" graphql:\"city\""
+					PostalCode *string "json:\"postal_code\" graphql:\"postal_code\""
+				} "json:\"address\" graphql:\"address\""
+			} "json:\"business\" graphql:\"business\""
 		} "json:\"pharmacy\" graphql:\"pharmacy\""
 		Products []*struct {
-			IProduct struct {
-				ID   string "json:\"id\" graphql:\"id\""
-				Name string "json:\"name\" graphql:\"name\""
-			} "graphql:\"... on IProduct\""
-			MedicinalProduct struct {
-				Medication struct {
-					Name   *string "json:\"name\" graphql:\"name\""
-					Dosage *struct {
-						Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
-						Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
-					} "json:\"dosage\" graphql:\"dosage\""
-					Quantity *int "json:\"quantity\" graphql:\"quantity\""
-				} "json:\"medication\" graphql:\"medication\""
-			} "graphql:\"... on MedicinalProduct\""
+			ID         string "json:\"id\" graphql:\"id\""
+			Name       string "json:\"name\" graphql:\"name\""
+			Medication *struct {
+				Name   *string "json:\"name\" graphql:\"name\""
+				Dosage *struct {
+					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+					Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+				} "json:\"dosage\" graphql:\"dosage\""
+				Quantity *int "json:\"quantity\" graphql:\"quantity\""
+			} "json:\"medication\" graphql:\"medication\""
 		} "json:\"products\" graphql:\"products\""
 		CreatedAt *time.Time          "json:\"created_at\" graphql:\"created_at\""
 		Status    *PrescriptionStatus "json:\"status\" graphql:\"status\""
@@ -105,32 +103,30 @@ const GetPrescriptionDocument = `query GetPrescription ($id: ID!) {
 		}
 		pharmacy {
 			id
-			name
 			register {
 				type
 				value
 			}
-			address {
-				line1
-				line2
-				city
-				postal_code
+			business {
+				name
+				address {
+					line1
+					line2
+					city
+					postal_code
+				}
 			}
 		}
 		products {
-			... on IProduct {
-				id
+			id
+			name
+			medication {
 				name
-			}
-			... on MedicinalProduct {
-				medication {
-					name
-					dosage {
-						quantity
-						unit
-					}
+				dosage {
 					quantity
+					unit
 				}
+				quantity
 			}
 		}
 		created_at

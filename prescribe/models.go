@@ -9,19 +9,16 @@ import (
 	"time"
 )
 
-type IProduct interface {
-	IsIProduct()
-}
-
-type Product interface {
-	IsProduct()
-}
-
 type Address struct {
 	Line1      *string `json:"line1,omitempty"`
 	Line2      *string `json:"line2,omitempty"`
 	City       *string `json:"city,omitempty"`
 	PostalCode *string `json:"postal_code,omitempty"`
+}
+
+type Business struct {
+	Name    *string  `json:"name,omitempty"`
+	Address *Address `json:"address,omitempty"`
 }
 
 type CreatePrescriptionInput struct {
@@ -41,15 +38,6 @@ type Medication struct {
 	Quantity *int    `json:"quantity,omitempty"`
 }
 
-type MedicinalProduct struct {
-	ID         string      `json:"id"`
-	Name       string      `json:"name"`
-	Medication *Medication `json:"medication,omitempty"`
-}
-
-func (MedicinalProduct) IsIProduct() {}
-func (MedicinalProduct) IsProduct()  {}
-
 type Name struct {
 	Title      *string `json:"title,omitempty"`
 	GivenName  *string `json:"given_name,omitempty"`
@@ -67,9 +55,8 @@ type PatientInput struct {
 
 type Pharmacy struct {
 	ID       string    `json:"id"`
-	Name     *string   `json:"name,omitempty"`
+	Business *Business `json:"business,omitempty"`
 	Register *Register `json:"register,omitempty"`
-	Address  *Address  `json:"address,omitempty"`
 }
 
 type Prescriber struct {
@@ -87,10 +74,16 @@ type Prescription struct {
 	Patient        *Patient            `json:"patient,omitempty"`
 	Prescriber     *Prescriber         `json:"prescriber,omitempty"`
 	Pharmacy       *Pharmacy           `json:"pharmacy,omitempty"`
-	Products       []Product           `json:"products,omitempty"`
+	Products       []*Product          `json:"products,omitempty"`
 	CreatedAt      *time.Time          `json:"created_at,omitempty"`
 	Status         *PrescriptionStatus `json:"status,omitempty"`
 	ConsultationID *string             `json:"consultation_id,omitempty"`
+}
+
+type Product struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Medication *Medication `json:"medication,omitempty"`
 }
 
 type ProductInput struct {

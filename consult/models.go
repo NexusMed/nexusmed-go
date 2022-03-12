@@ -100,6 +100,7 @@ type Product struct {
 	ID         string      `json:"id"`
 	Name       string      `json:"name"`
 	Medication *Medication `json:"medication,omitempty"`
+	Quantity   *int        `json:"quantity,omitempty"`
 }
 
 type ProductInput struct {

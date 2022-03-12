@@ -25,6 +25,32 @@ type Mutation struct {
 	AnswerQuestionnaire *QuestionnaireAnswers "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
 	CreateConsultation  Consultation          "json:\"createConsultation\" graphql:\"createConsultation\""
 }
+type AsynchronousConsultationParts struct {
+	ID      string "json:\"id\" graphql:\"id\""
+	Patient struct {
+		ID   string "json:\"id\" graphql:\"id\""
+		Name *struct {
+			GivenName  *string "json:\"given_name\" graphql:\"given_name\""
+			FamilyName *string "json:\"family_name\" graphql:\"family_name\""
+		} "json:\"name\" graphql:\"name\""
+	} "json:\"patient\" graphql:\"patient\""
+	Status   ConsultationStatus "json:\"status\" graphql:\"status\""
+	Products []*struct {
+		ID         string "json:\"id\" graphql:\"id\""
+		Name       string "json:\"name\" graphql:\"name\""
+		Medication *struct {
+			Name   *string "json:\"name\" graphql:\"name\""
+			Dosage *struct {
+				Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+				Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+			} "json:\"dosage\" graphql:\"dosage\""
+			Quantity *int "json:\"quantity\" graphql:\"quantity\""
+		} "json:\"medication\" graphql:\"medication\""
+	} "json:\"products\" graphql:\"products\""
+	QuestionnaireAnswers *struct {
+		ID string "json:\"id\" graphql:\"id\""
+	} "json:\"questionnaire_answers\" graphql:\"questionnaire_answers\""
+}
 type QuestionParts struct {
 	Index   int            "json:\"index\" graphql:\"index\""
 	Type    QuestionType   "json:\"type\" graphql:\"type\""
@@ -36,6 +62,34 @@ type AnswerParts struct {
 	Index  int    "json:\"index\" graphql:\"index\""
 	Value  string "json:\"value\" graphql:\"value\""
 	Reject bool   "json:\"reject\" graphql:\"reject\""
+}
+type GetConsultation struct {
+	GetConsultation *struct {
+		ID      string "json:\"id\" graphql:\"id\""
+		Patient struct {
+			ID   string "json:\"id\" graphql:\"id\""
+			Name *struct {
+				GivenName  *string "json:\"given_name\" graphql:\"given_name\""
+				FamilyName *string "json:\"family_name\" graphql:\"family_name\""
+			} "json:\"name\" graphql:\"name\""
+		} "json:\"patient\" graphql:\"patient\""
+		Status   ConsultationStatus "json:\"status\" graphql:\"status\""
+		Products []*struct {
+			ID         string "json:\"id\" graphql:\"id\""
+			Name       string "json:\"name\" graphql:\"name\""
+			Medication *struct {
+				Name   *string "json:\"name\" graphql:\"name\""
+				Dosage *struct {
+					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+					Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+				} "json:\"dosage\" graphql:\"dosage\""
+				Quantity *int "json:\"quantity\" graphql:\"quantity\""
+			} "json:\"medication\" graphql:\"medication\""
+		} "json:\"products\" graphql:\"products\""
+		QuestionnaireAnswers *struct {
+			ID string "json:\"id\" graphql:\"id\""
+		} "json:\"questionnaire_answers\" graphql:\"questionnaire_answers\""
+	} "json:\"getConsultation\" graphql:\"getConsultation\""
 }
 type GetQuestionnaire struct {
 	GetQuestionnaire *struct {
@@ -96,6 +150,54 @@ type AnswerQuestionnaire struct {
 	} "json:\"answerQuestionnaire\" graphql:\"answerQuestionnaire\""
 }
 
+const GetConsultationDocument = `query GetConsultation ($id: ID!) {
+	getConsultation(id: $id) {
+		... on AsynchronousConsultation {
+			... AsynchronousConsultationParts
+		}
+	}
+}
+fragment AsynchronousConsultationParts on AsynchronousConsultation {
+	id
+	patient {
+		id
+		name {
+			given_name
+			family_name
+		}
+	}
+	status
+	products {
+		id
+		name
+		medication {
+			name
+			dosage {
+				quantity
+				unit
+			}
+			quantity
+		}
+	}
+	questionnaire_answers {
+		id
+	}
+}
+`
+
+func (c *Client) GetConsultation(id string, interceptors ...client.RequestInterceptor) (*GetConsultation, error) {
+	vars := map[string]interface{}{
+		"id": id,
+	}
+
+	var res GetConsultation
+	if err := c.Client.Post("GetConsultation", GetConsultationDocument, &res, vars, interceptors...); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
 const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 	getQuestionnaire(id: $id) {
 		id
@@ -105,11 +207,6 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -118,6 +215,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
@@ -138,31 +240,34 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 	createConsultation(input: $input) {
 		__typename
 		... on AsynchronousConsultation {
-			id
-			patient {
-				id
-				name {
-					given_name
-					family_name
-				}
-			}
-			status
-			products {
-				id
-				name
-				medication {
-					name
-					dosage {
-						quantity
-						unit
-					}
-					quantity
-				}
-			}
-			questionnaire_answers {
-				id
-			}
+			... AsynchronousConsultationParts
 		}
+	}
+}
+fragment AsynchronousConsultationParts on AsynchronousConsultation {
+	id
+	patient {
+		id
+		name {
+			given_name
+			family_name
+		}
+	}
+	status
+	products {
+		id
+		name
+		medication {
+			name
+			dosage {
+				quantity
+				unit
+			}
+			quantity
+		}
+	}
+	questionnaire_answers {
+		id
 	}
 }
 `
@@ -189,6 +294,11 @@ const CreateQuestionnaireDocument = `mutation CreateQuestionnaire ($input: Creat
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -197,11 +307,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 

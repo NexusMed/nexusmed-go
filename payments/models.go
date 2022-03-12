@@ -46,8 +46,8 @@ type CombinedPayment struct {
 	Delivery     Delivery           `json:"delivery,omitempty"`
 }
 
-func (CombinedPayment) IsIPayment() {}
 func (CombinedPayment) IsPayment()  {}
+func (CombinedPayment) IsIPayment() {}
 
 type Consultation struct {
 	ID       string      `json:"id"`
@@ -67,8 +67,8 @@ type ConsultationPayment struct {
 	Consultation *Consultation      `json:"consultation,omitempty"`
 }
 
-func (ConsultationPayment) IsIPayment() {}
 func (ConsultationPayment) IsPayment()  {}
+func (ConsultationPayment) IsIPayment() {}
 
 type CreatePaymentInput struct {
 	Type         PaymentType              `json:"type"`
@@ -130,8 +130,8 @@ type PrescriptionPayment struct {
 	Delivery     Delivery           `json:"delivery,omitempty"`
 }
 
-func (PrescriptionPayment) IsPayment()  {}
 func (PrescriptionPayment) IsIPayment() {}
+func (PrescriptionPayment) IsPayment()  {}
 
 type Product struct {
 	ID string `json:"id"`
