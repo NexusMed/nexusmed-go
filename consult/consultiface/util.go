@@ -30,3 +30,11 @@ func AnswerInputListValues(in []*consult.AnswerInput) []consult.AnswerInput {
 	}
 	return out
 }
+
+// GetConsultation converts consult.Consultation to *consult.GetConsultation
+func GetConsultation(in consult.Consultation) *consult.GetConsultation {
+	b, _ := json.Marshal(in)
+	var out consult.GetConsultation
+	json.Unmarshal(b, &out.GetConsultation)
+	return &out
+}
