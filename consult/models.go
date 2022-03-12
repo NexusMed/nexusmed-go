@@ -16,14 +16,6 @@ type IConsultation interface {
 	IsIConsultation()
 }
 
-type IProduct interface {
-	IsIProduct()
-}
-
-type Product interface {
-	IsProduct()
-}
-
 type Answer struct {
 	Index  int    `json:"index"`
 	Value  string `json:"value"`
@@ -48,19 +40,12 @@ type AsynchronousConsultation struct {
 	Status               ConsultationStatus    `json:"status"`
 	Rejected             *bool                 `json:"rejected,omitempty"`
 	RejectReason         *string               `json:"reject_reason,omitempty"`
-	Products             []Product             `json:"products,omitempty"`
+	Products             []*Product            `json:"products,omitempty"`
 	QuestionnaireAnswers *QuestionnaireAnswers `json:"questionnaire_answers,omitempty"`
 }
 
 func (AsynchronousConsultation) IsIConsultation() {}
 func (AsynchronousConsultation) IsConsultation()  {}
-
-type Cosmetic struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func (Cosmetic) IsIProduct() {}
 
 type CreateAnswer struct {
 	Value  string `json:"value"`
@@ -84,27 +69,11 @@ type Dosage struct {
 	Unit     *DosageUnit `json:"unit,omitempty"`
 }
 
-type MedicalDevice struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func (MedicalDevice) IsIProduct() {}
-
 type Medication struct {
 	Name     *string `json:"name,omitempty"`
 	Dosage   *Dosage `json:"dosage,omitempty"`
 	Quantity *int    `json:"quantity,omitempty"`
 }
-
-type MedicinalProduct struct {
-	ID         string      `json:"id"`
-	Name       string      `json:"name"`
-	Medication *Medication `json:"medication,omitempty"`
-}
-
-func (MedicinalProduct) IsProduct()  {}
-func (MedicinalProduct) IsIProduct() {}
 
 type Name struct {
 	Title      *string `json:"title,omitempty"`
@@ -125,6 +94,12 @@ type Prescriber struct {
 	ID       string    `json:"id"`
 	Name     *Name     `json:"name,omitempty"`
 	Register *Register `json:"register,omitempty"`
+}
+
+type Product struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Medication *Medication `json:"medication,omitempty"`
 }
 
 type ProductInput struct {
@@ -182,13 +157,6 @@ type Register struct {
 	Type  *RegisterType `json:"type,omitempty"`
 	Value *string       `json:"value,omitempty"`
 }
-
-type Supplement struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func (Supplement) IsIProduct() {}
 
 type ConsultationInputType string
 

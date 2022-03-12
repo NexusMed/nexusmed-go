@@ -130,8 +130,8 @@ type PrescriptionPayment struct {
 	Delivery     Delivery           `json:"delivery,omitempty"`
 }
 
-func (PrescriptionPayment) IsIPayment() {}
 func (PrescriptionPayment) IsPayment()  {}
+func (PrescriptionPayment) IsIPayment() {}
 
 type Product struct {
 	ID string `json:"id"`

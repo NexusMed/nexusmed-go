@@ -58,22 +58,18 @@ type CreateConsultation struct {
 			} "json:\"patient\" graphql:\"patient\""
 			Status   ConsultationStatus "json:\"status\" graphql:\"status\""
 			Products []*struct {
-				IProduct struct {
-					ID   string "json:\"id\" graphql:\"id\""
-					Name string "json:\"name\" graphql:\"name\""
-				} "graphql:\"... on IProduct\""
-				MedicinalProduct struct {
-					Medication struct {
-						Name   *string "json:\"name\" graphql:\"name\""
-						Dosage *struct {
-							Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
-							Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
-						} "json:\"dosage\" graphql:\"dosage\""
-						Quantity *int "json:\"quantity\" graphql:\"quantity\""
-					} "json:\"medication\" graphql:\"medication\""
-				} "graphql:\"... on MedicinalProduct\""
+				ID         string "json:\"id\" graphql:\"id\""
+				Name       string "json:\"name\" graphql:\"name\""
+				Medication *struct {
+					Name   *string "json:\"name\" graphql:\"name\""
+					Dosage *struct {
+						Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
+						Unit     *DosageUnit "json:\"unit\" graphql:\"unit\""
+					} "json:\"dosage\" graphql:\"dosage\""
+					Quantity *int "json:\"quantity\" graphql:\"quantity\""
+				} "json:\"medication\" graphql:\"medication\""
 			} "json:\"products\" graphql:\"products\""
-			QuestionnaireAnswers struct {
+			QuestionnaireAnswers *struct {
 				ID string "json:\"id\" graphql:\"id\""
 			} "json:\"questionnaire_answers\" graphql:\"questionnaire_answers\""
 		} "graphql:\"... on AsynchronousConsultation\""
@@ -109,6 +105,11 @@ const GetQuestionnaireDocument = `query GetQuestionnaire ($id: ID!) {
 		}
 	}
 }
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
+}
 fragment QuestionParts on Question {
 	index
 	type
@@ -117,11 +118,6 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
-}
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
 }
 `
 
@@ -152,19 +148,15 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 			}
 			status
 			products {
-				... on IProduct {
-					id
+				id
+				name
+				medication {
 					name
-				}
-				... on MedicinalProduct {
-					medication {
-						name
-						dosage {
-							quantity
-							unit
-						}
+					dosage {
 						quantity
+						unit
 					}
+					quantity
 				}
 			}
 			questionnaire_answers {
