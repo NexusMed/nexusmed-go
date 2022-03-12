@@ -83,13 +83,14 @@ type PrescriberInput struct {
 }
 
 type Prescription struct {
-	ID         string              `json:"id"`
-	Patient    *Patient            `json:"patient,omitempty"`
-	Prescriber *Prescriber         `json:"prescriber,omitempty"`
-	Pharmacy   *Pharmacy           `json:"pharmacy,omitempty"`
-	Products   []Product           `json:"products,omitempty"`
-	CreatedAt  *time.Time          `json:"created_at,omitempty"`
-	Status     *PrescriptionStatus `json:"status,omitempty"`
+	ID             string              `json:"id"`
+	Patient        *Patient            `json:"patient,omitempty"`
+	Prescriber     *Prescriber         `json:"prescriber,omitempty"`
+	Pharmacy       *Pharmacy           `json:"pharmacy,omitempty"`
+	Products       []Product           `json:"products,omitempty"`
+	CreatedAt      *time.Time          `json:"created_at,omitempty"`
+	Status         *PrescriptionStatus `json:"status,omitempty"`
+	ConsultationID *string             `json:"consultation_id,omitempty"`
 }
 
 type ProductInput struct {

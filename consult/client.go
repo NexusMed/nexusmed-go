@@ -50,7 +50,11 @@ type CreateConsultation struct {
 		AsynchronousConsultation struct {
 			ID      string "json:\"id\" graphql:\"id\""
 			Patient struct {
-				ID string "json:\"id\" graphql:\"id\""
+				ID   string "json:\"id\" graphql:\"id\""
+				Name *struct {
+					GivenName  *string "json:\"given_name\" graphql:\"given_name\""
+					FamilyName *string "json:\"family_name\" graphql:\"family_name\""
+				} "json:\"name\" graphql:\"name\""
 			} "json:\"patient\" graphql:\"patient\""
 			Status   ConsultationStatus "json:\"status\" graphql:\"status\""
 			Products []*struct {
@@ -128,6 +132,10 @@ const CreateConsultationDocument = `mutation CreateConsultation ($input: CreateC
 			id
 			patient {
 				id
+				name {
+					given_name
+					family_name
+				}
 			}
 			status
 			products {
@@ -209,11 +217,6 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -222,6 +225,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 
