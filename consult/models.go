@@ -16,10 +16,6 @@ type IConsultation interface {
 	IsIConsultation()
 }
 
-type Prescriber interface {
-	IsPrescriber()
-}
-
 type Product interface {
 	IsProduct()
 }
@@ -44,14 +40,16 @@ type AnswerQuestionnaireInput struct {
 type AsynchronousConsultation struct {
 	ID                   string                `json:"id"`
 	Patient              *Patient              `json:"patient,omitempty"`
-	Assignee             Prescriber            `json:"assignee,omitempty"`
+	Prescriber           *Prescriber           `json:"prescriber,omitempty"`
 	Status               ConsultationStatus    `json:"status"`
+	Rejected             *bool                 `json:"rejected,omitempty"`
+	RejectReason         *string               `json:"reject_reason,omitempty"`
 	Products             []Product             `json:"products,omitempty"`
 	QuestionnaireAnswers *QuestionnaireAnswers `json:"questionnaire_answers,omitempty"`
 }
 
-func (AsynchronousConsultation) IsIConsultation() {}
 func (AsynchronousConsultation) IsConsultation()  {}
+func (AsynchronousConsultation) IsIConsultation() {}
 
 type Cosmetic struct {
 	ID string `json:"id"`
@@ -76,14 +74,6 @@ type CreateQuestionnaireInput struct {
 	Questions []*QuestionInput `json:"questions,omitempty"`
 }
 
-type Doctor struct {
-	ID       string    `json:"id"`
-	Name     *Name     `json:"name,omitempty"`
-	Register *Register `json:"register,omitempty"`
-}
-
-func (Doctor) IsPrescriber() {}
-
 type MedicalDevice struct {
 	ID string `json:"id"`
 }
@@ -102,14 +92,6 @@ type Name struct {
 	FamilyName *string `json:"family_name,omitempty"`
 }
 
-type Nurse struct {
-	ID       string    `json:"id"`
-	Name     *Name     `json:"name,omitempty"`
-	Register *Register `json:"register,omitempty"`
-}
-
-func (Nurse) IsPrescriber() {}
-
 type Patient struct {
 	ID   string `json:"id"`
 	Name *Name  `json:"name,omitempty"`
@@ -119,13 +101,11 @@ type PatientInput struct {
 	ID string `json:"id"`
 }
 
-type Pharmacist struct {
+type Prescriber struct {
 	ID       string    `json:"id"`
 	Name     *Name     `json:"name,omitempty"`
 	Register *Register `json:"register,omitempty"`
 }
-
-func (Pharmacist) IsPrescriber() {}
 
 type ProductInput struct {
 	ID       string `json:"id"`
