@@ -6,6 +6,9 @@ import (
 )
 
 type ConsultAPI interface {
+	// Get a consultation by Id
+	GetConsultation(id string, interceptors ...client.RequestInterceptor) (*consult.GetConsultation, error)
+
 	// Get a questionnaire by Id
 	GetQuestionnaire(id string, interceptors ...client.RequestInterceptor) (*consult.GetQuestionnaire, error)
 
