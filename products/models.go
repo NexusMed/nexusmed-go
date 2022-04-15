@@ -16,10 +16,28 @@ type Product interface {
 	IsProduct()
 }
 
+type Cosmetic struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+}
+
+func (Cosmetic) IsProduct()  {}
+func (Cosmetic) IsIProduct() {}
+
 type Dosage struct {
 	Quantity *float64    `json:"quantity,omitempty"`
 	Unit     *DosageUnit `json:"unit,omitempty"`
 }
+
+type MedicalDevice struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+}
+
+func (MedicalDevice) IsProduct()  {}
+func (MedicalDevice) IsIProduct() {}
 
 type Medication struct {
 	Name     *string `json:"name,omitempty"`
@@ -35,13 +53,22 @@ type MedicinalProduct struct {
 	ConsultFee *int        `json:"consult_fee,omitempty"`
 }
 
-func (MedicinalProduct) IsIProduct() {}
 func (MedicinalProduct) IsProduct()  {}
+func (MedicinalProduct) IsIProduct() {}
 
 type Products struct {
 	Items     []Product `json:"items,omitempty"`
 	NextToken *string   `json:"next_token,omitempty"`
 }
+
+type Supplement struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+}
+
+func (Supplement) IsProduct()  {}
+func (Supplement) IsIProduct() {}
 
 type DosageUnit string
 
@@ -92,15 +119,21 @@ type ProductType string
 
 const (
 	ProductTypeMedicinalProduct ProductType = "MedicinalProduct"
+	ProductTypeMedicalDevice    ProductType = "MedicalDevice"
+	ProductTypeCosmetic         ProductType = "Cosmetic"
+	ProductTypeSupplement       ProductType = "Supplement"
 )
 
 var AllProductType = []ProductType{
 	ProductTypeMedicinalProduct,
+	ProductTypeMedicalDevice,
+	ProductTypeCosmetic,
+	ProductTypeSupplement,
 }
 
 func (e ProductType) IsValid() bool {
 	switch e {
-	case ProductTypeMedicinalProduct:
+	case ProductTypeMedicinalProduct, ProductTypeMedicalDevice, ProductTypeCosmetic, ProductTypeSupplement:
 		return true
 	}
 	return false

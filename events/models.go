@@ -31,6 +31,12 @@ type Event struct {
 	AccountID *string `json:"account_id,omitempty"`
 	CreatedAt *string `json:"created_at,omitempty"`
 	Data      *Data   `json:"data,omitempty"`
+	Delivered *bool   `json:"delivered,omitempty"`
+}
+
+type Events struct {
+	Items     []*Event `json:"items,omitempty"`
+	NextToken *string  `json:"nextToken,omitempty"`
 }
 
 type UpdateEndpointInput struct {

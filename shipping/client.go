@@ -93,11 +93,6 @@ const GetShipmentDocument = `query GetShipment ($id: ID!) {
 		created_at
 	}
 }
-fragment ProductParts on Product {
-	id
-	name
-	quantity
-}
 fragment PatientParts on Patient {
 	id
 	name {
@@ -119,6 +114,11 @@ fragment SenderParts on Sender {
 			... AddressParts
 		}
 	}
+}
+fragment ProductParts on Product {
+	id
+	name
+	quantity
 }
 `
 
@@ -156,14 +156,6 @@ const CreateShipmentDocument = `mutation CreateShipment ($input: CreateShipmentI
 		created_at
 	}
 }
-fragment SenderParts on Sender {
-	... on Pharmacy {
-		id
-		address {
-			... AddressParts
-		}
-	}
-}
 fragment ProductParts on Product {
 	id
 	name
@@ -182,6 +174,14 @@ fragment AddressParts on Address {
 	line2
 	city
 	postal_code
+}
+fragment SenderParts on Sender {
+	... on Pharmacy {
+		id
+		address {
+			... AddressParts
+		}
+	}
 }
 `
 

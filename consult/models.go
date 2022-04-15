@@ -82,8 +82,9 @@ type Name struct {
 }
 
 type Patient struct {
-	ID   string `json:"id"`
-	Name *Name  `json:"name,omitempty"`
+	ID       string  `json:"id"`
+	Name     *Name   `json:"name,omitempty"`
+	StripeID *string `json:"stripe_id,omitempty"`
 }
 
 type PatientInput struct {

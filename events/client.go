@@ -16,7 +16,7 @@ func New(interceptors ...client.RequestInterceptor) *Client {
 
 type Query struct {
 	GetEvent          *Event      "json:\"getEvent\" graphql:\"getEvent\""
-	GetEvents         []*Event    "json:\"getEvents\" graphql:\"getEvents\""
+	GetEvents         *Events     "json:\"getEvents\" graphql:\"getEvents\""
 	GetEndpoint       *Endpoint   "json:\"getEndpoint\" graphql:\"getEndpoint\""
 	GetEndpoints      []*Endpoint "json:\"getEndpoints\" graphql:\"getEndpoints\""
 	GetEndpointSecret *string     "json:\"getEndpointSecret\" graphql:\"getEndpointSecret\""
