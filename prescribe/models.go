@@ -8,14 +8,6 @@ import (
 	"strconv"
 )
 
-type IProduct interface {
-	IsIProduct()
-}
-
-type Product interface {
-	IsProduct()
-}
-
 type Address struct {
 	Line1      *string `json:"line1,omitempty"`
 	Line2      *string `json:"line2,omitempty"`
@@ -59,15 +51,6 @@ type Medication struct {
 	Usage    *Usage  `json:"usage,omitempty"`
 }
 
-type MedicinalProduct struct {
-	ID         string      `json:"id"`
-	Name       string      `json:"name"`
-	Medication *Medication `json:"medication,omitempty"`
-}
-
-func (MedicinalProduct) IsIProduct() {}
-func (MedicinalProduct) IsProduct()  {}
-
 type Name struct {
 	Title      *string `json:"title,omitempty"`
 	GivenName  *string `json:"given_name,omitempty"`
@@ -108,11 +91,17 @@ type Prescription struct {
 	Patient        *Patient            `json:"patient,omitempty"`
 	Prescriber     *Prescriber         `json:"prescriber,omitempty"`
 	Pharmacy       *Pharmacy           `json:"pharmacy,omitempty"`
-	Products       []Product           `json:"products,omitempty"`
+	Products       []*Product          `json:"products,omitempty"`
 	CreatedAt      *string             `json:"created_at,omitempty"`
 	Status         *PrescriptionStatus `json:"status,omitempty"`
 	Shipment       *Shipment           `json:"shipment,omitempty"`
 	ConsultationID *string             `json:"consultation_id,omitempty"`
+}
+
+type Product struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Medication *Medication `json:"medication,omitempty"`
 }
 
 type ProductInput struct {

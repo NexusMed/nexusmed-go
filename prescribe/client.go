@@ -63,7 +63,7 @@ type GetPrescription struct {
 		Products []*struct {
 			ID         string "json:\"id\" graphql:\"id\""
 			Name       string "json:\"name\" graphql:\"name\""
-			Medication struct {
+			Medication *struct {
 				Name   *string "json:\"name\" graphql:\"name\""
 				Dosage *struct {
 					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
@@ -117,17 +117,15 @@ const GetPrescriptionDocument = `query GetPrescription ($id: ID!) {
 			}
 		}
 		products {
-			... on MedicinalProduct {
-				id
+			id
+			name
+			medication {
 				name
-				medication {
-					name
-					dosage {
-						quantity
-						unit
-					}
+				dosage {
 					quantity
+					unit
 				}
+				quantity
 			}
 		}
 		created_at
