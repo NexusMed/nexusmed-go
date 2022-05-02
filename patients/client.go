@@ -15,8 +15,10 @@ func New(interceptors ...client.RequestInterceptor) *Client {
 }
 
 type Query struct {
-	GetPatient  *Patient  "json:\"getPatient\" graphql:\"getPatient\""
-	GetPatients *Patients "json:\"getPatients\" graphql:\"getPatients\""
+	GetPatient       *Patient   "json:\"getPatient\" graphql:\"getPatient\""
+	GetPatients      *Patients  "json:\"getPatients\" graphql:\"getPatients\""
+	GetPatientsCount *int       "json:\"getPatientsCount\" graphql:\"getPatientsCount\""
+	SearchPatients   []*Patient "json:\"searchPatients\" graphql:\"searchPatients\""
 }
 type Mutation struct {
 	CreatePatient *Patient "json:\"createPatient\" graphql:\"createPatient\""

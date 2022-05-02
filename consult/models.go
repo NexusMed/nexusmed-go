@@ -44,8 +44,8 @@ type AsynchronousConsultation struct {
 	QuestionnaireAnswers *QuestionnaireAnswers `json:"questionnaire_answers,omitempty"`
 }
 
-func (AsynchronousConsultation) IsConsultation()  {}
 func (AsynchronousConsultation) IsIConsultation() {}
+func (AsynchronousConsultation) IsConsultation()  {}
 
 type CreateAnswer struct {
 	Value  string `json:"value"`

@@ -6,14 +6,28 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-	"time"
 )
+
+type IProduct interface {
+	IsIProduct()
+}
+
+type Product interface {
+	IsProduct()
+}
 
 type Address struct {
 	Line1      *string `json:"line1,omitempty"`
 	Line2      *string `json:"line2,omitempty"`
 	City       *string `json:"city,omitempty"`
 	PostalCode *string `json:"postal_code,omitempty"`
+}
+
+type AddressInput struct {
+	Line1      string  `json:"line1"`
+	Line2      *string `json:"line2,omitempty"`
+	City       string  `json:"city"`
+	PostalCode string  `json:"postal_code"`
 }
 
 type Business struct {
@@ -23,11 +37,17 @@ type Business struct {
 
 type CreatePrescriptionInput struct {
 	Patient    *PatientInput    `json:"patient,omitempty"`
-	Prescriber *PrescriberInput `json:"prescriber,omitempty"`
 	Products   []*ProductInput  `json:"products,omitempty"`
+	Prescriber *PrescriberInput `json:"prescriber,omitempty"`
+	Pharmacy   *PharmacyInput   `json:"pharmacy,omitempty"`
 }
 
 type Dosage struct {
+	Quantity *float64    `json:"quantity,omitempty"`
+	Unit     *DosageUnit `json:"unit,omitempty"`
+}
+
+type DosageInput struct {
 	Quantity *float64    `json:"quantity,omitempty"`
 	Unit     *DosageUnit `json:"unit,omitempty"`
 }
@@ -36,7 +56,17 @@ type Medication struct {
 	Name     *string `json:"name,omitempty"`
 	Dosage   *Dosage `json:"dosage,omitempty"`
 	Quantity *int    `json:"quantity,omitempty"`
+	Usage    *Usage  `json:"usage,omitempty"`
 }
+
+type MedicinalProduct struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Medication *Medication `json:"medication,omitempty"`
+}
+
+func (MedicinalProduct) IsIProduct() {}
+func (MedicinalProduct) IsProduct()  {}
 
 type Name struct {
 	Title      *string `json:"title,omitempty"`
@@ -59,6 +89,10 @@ type Pharmacy struct {
 	Register *Register `json:"register,omitempty"`
 }
 
+type PharmacyInput struct {
+	ID string `json:"id"`
+}
+
 type Prescriber struct {
 	ID       string    `json:"id"`
 	Name     *Name     `json:"name,omitempty"`
@@ -74,16 +108,11 @@ type Prescription struct {
 	Patient        *Patient            `json:"patient,omitempty"`
 	Prescriber     *Prescriber         `json:"prescriber,omitempty"`
 	Pharmacy       *Pharmacy           `json:"pharmacy,omitempty"`
-	Products       []*Product          `json:"products,omitempty"`
-	CreatedAt      *time.Time          `json:"created_at,omitempty"`
+	Products       []Product           `json:"products,omitempty"`
+	CreatedAt      *string             `json:"created_at,omitempty"`
 	Status         *PrescriptionStatus `json:"status,omitempty"`
+	Shipment       *Shipment           `json:"shipment,omitempty"`
 	ConsultationID *string             `json:"consultation_id,omitempty"`
-}
-
-type Product struct {
-	ID         string      `json:"id"`
-	Name       string      `json:"name"`
-	Medication *Medication `json:"medication,omitempty"`
 }
 
 type ProductInput struct {
@@ -94,6 +123,18 @@ type ProductInput struct {
 type Register struct {
 	Type  *RegisterType `json:"type,omitempty"`
 	Value *string       `json:"value,omitempty"`
+}
+
+type Shipment struct {
+	ID string `json:"id"`
+}
+
+type Usage struct {
+	Text *string `json:"text,omitempty"`
+}
+
+type UsageInput struct {
+	Text *string `json:"text,omitempty"`
 }
 
 type DosageUnit string

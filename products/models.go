@@ -36,8 +36,8 @@ type MedicalDevice struct {
 	Price int    `json:"price"`
 }
 
-func (MedicalDevice) IsProduct()  {}
 func (MedicalDevice) IsIProduct() {}
+func (MedicalDevice) IsProduct()  {}
 
 type Medication struct {
 	Name     *string `json:"name,omitempty"`
@@ -53,8 +53,8 @@ type MedicinalProduct struct {
 	ConsultFee *int        `json:"consult_fee,omitempty"`
 }
 
-func (MedicinalProduct) IsProduct()  {}
 func (MedicinalProduct) IsIProduct() {}
+func (MedicinalProduct) IsProduct()  {}
 
 type Products struct {
 	Items     []Product `json:"items,omitempty"`
@@ -67,8 +67,8 @@ type Supplement struct {
 	Price int    `json:"price"`
 }
 
-func (Supplement) IsProduct()  {}
 func (Supplement) IsIProduct() {}
+func (Supplement) IsProduct()  {}
 
 type DosageUnit string
 

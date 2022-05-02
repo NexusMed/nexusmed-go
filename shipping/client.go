@@ -47,15 +47,19 @@ type SenderParts struct {
 }
 type GetShipment struct {
 	GetShipment *struct {
-		ID        string          "json:\"id\" graphql:\"id\""
-		Products  []*ProductParts "json:\"products\" graphql:\"products\""
-		Patient   *PatientParts   "json:\"patient\" graphql:\"patient\""
-		Address   *AddressParts   "json:\"address\" graphql:\"address\""
-		Courier   *Courier        "json:\"courier\" graphql:\"courier\""
-		Service   *Service        "json:\"service\" graphql:\"service\""
-		Status    *ShipmentStatus "json:\"status\" graphql:\"status\""
-		Sender    *SenderParts    "json:\"sender\" graphql:\"sender\""
-		CreatedAt *string         "json:\"created_at\" graphql:\"created_at\""
+		ID       string          "json:\"id\" graphql:\"id\""
+		Products []*ProductParts "json:\"products\" graphql:\"products\""
+		Patient  *PatientParts   "json:\"patient\" graphql:\"patient\""
+		Address  *AddressParts   "json:\"address\" graphql:\"address\""
+		Courier  *Courier        "json:\"courier\" graphql:\"courier\""
+		Service  *Service        "json:\"service\" graphql:\"service\""
+		Status   *ShipmentStatus "json:\"status\" graphql:\"status\""
+		Sender   *SenderParts    "json:\"sender\" graphql:\"sender\""
+		Tracking *struct {
+			Code *string "json:\"code\" graphql:\"code\""
+			URL  *string "json:\"url\" graphql:\"url\""
+		} "json:\"tracking\" graphql:\"tracking\""
+		CreatedAt *string "json:\"created_at\" graphql:\"created_at\""
 	} "json:\"getShipment\" graphql:\"getShipment\""
 }
 type CreateShipment struct {
@@ -90,8 +94,17 @@ const GetShipmentDocument = `query GetShipment ($id: ID!) {
 		sender {
 			... SenderParts
 		}
+		tracking {
+			code
+			url
+		}
 		created_at
 	}
+}
+fragment ProductParts on Product {
+	id
+	name
+	quantity
 }
 fragment PatientParts on Patient {
 	id
@@ -114,11 +127,6 @@ fragment SenderParts on Sender {
 			... AddressParts
 		}
 	}
-}
-fragment ProductParts on Product {
-	id
-	name
-	quantity
 }
 `
 

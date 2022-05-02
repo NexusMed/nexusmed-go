@@ -81,6 +81,12 @@ type Shipment struct {
 	Status    *ShipmentStatus `json:"status,omitempty"`
 	Sender    Sender          `json:"sender,omitempty"`
 	CreatedAt *string         `json:"created_at,omitempty"`
+	Tracking  *Tracking       `json:"tracking,omitempty"`
+}
+
+type Tracking struct {
+	Code *string `json:"code,omitempty"`
+	URL  *string `json:"url,omitempty"`
 }
 
 type Courier string

@@ -19,6 +19,7 @@ type Query struct {
 	GetQuestionnaires       *Questionnaires       "json:\"getQuestionnaires\" graphql:\"getQuestionnaires\""
 	GetQuestionnaireAnswers *QuestionnaireAnswers "json:\"getQuestionnaireAnswers\" graphql:\"getQuestionnaireAnswers\""
 	GetConsultation         Consultation          "json:\"getConsultation\" graphql:\"getConsultation\""
+	GetConsultsCount        *int                  "json:\"getConsultsCount\" graphql:\"getConsultsCount\""
 }
 type Mutation struct {
 	CreateQuestionnaire *Questionnaire        "json:\"createQuestionnaire\" graphql:\"createQuestionnaire\""
@@ -338,11 +339,6 @@ const AnswerQuestionnaireDocument = `mutation AnswerQuestionnaire ($input: Answe
 		}
 	}
 }
-fragment AnswerParts on Answer {
-	index
-	value
-	reject
-}
 fragment QuestionParts on Question {
 	index
 	type
@@ -351,6 +347,11 @@ fragment QuestionParts on Question {
 	answers {
 		... AnswerParts
 	}
+}
+fragment AnswerParts on Answer {
+	index
+	value
+	reject
 }
 `
 

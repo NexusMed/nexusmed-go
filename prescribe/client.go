@@ -3,8 +3,6 @@
 package prescribe
 
 import (
-	"time"
-
 	"github.com/nexusmed/nexusmed-go/client"
 )
 
@@ -17,7 +15,8 @@ func New(interceptors ...client.RequestInterceptor) *Client {
 }
 
 type Query struct {
-	GetPrescription *Prescription "json:\"getPrescription\" graphql:\"getPrescription\""
+	GetPrescription       *Prescription "json:\"getPrescription\" graphql:\"getPrescription\""
+	GetPrescriptionsCount *int          "json:\"getPrescriptionsCount\" graphql:\"getPrescriptionsCount\""
 }
 type Mutation struct {
 	CreatePrescription *Prescription "json:\"createPrescription\" graphql:\"createPrescription\""
@@ -64,7 +63,7 @@ type GetPrescription struct {
 		Products []*struct {
 			ID         string "json:\"id\" graphql:\"id\""
 			Name       string "json:\"name\" graphql:\"name\""
-			Medication *struct {
+			Medication struct {
 				Name   *string "json:\"name\" graphql:\"name\""
 				Dosage *struct {
 					Quantity *float64    "json:\"quantity\" graphql:\"quantity\""
@@ -73,7 +72,7 @@ type GetPrescription struct {
 				Quantity *int "json:\"quantity\" graphql:\"quantity\""
 			} "json:\"medication\" graphql:\"medication\""
 		} "json:\"products\" graphql:\"products\""
-		CreatedAt *time.Time          "json:\"created_at\" graphql:\"created_at\""
+		CreatedAt *string             "json:\"created_at\" graphql:\"created_at\""
 		Status    *PrescriptionStatus "json:\"status\" graphql:\"status\""
 	} "json:\"getPrescription\" graphql:\"getPrescription\""
 }
@@ -118,15 +117,17 @@ const GetPrescriptionDocument = `query GetPrescription ($id: ID!) {
 			}
 		}
 		products {
-			id
-			name
-			medication {
+			... on MedicinalProduct {
+				id
 				name
-				dosage {
+				medication {
+					name
+					dosage {
+						quantity
+						unit
+					}
 					quantity
-					unit
 				}
-				quantity
 			}
 		}
 		created_at
